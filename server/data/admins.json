@@ -12,9 +12,5 @@
       "username": "teacher",
       "password": "voting123"
     }
-  ],
-  "rewrites": [
-    { "source": "/admin", "destination": "/" },
-    { "source": "/(.*)", "destination": "/" }
   ]
 }
