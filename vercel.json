@@ -4,6 +4,6 @@
     { "src": "index.html", "use": "@vercel/static" }
   ],
   "routes": [
-    { "src": "/admin", "dest": "/admin.html" }
+    { "src": "/", "dest": "/index.html" }   
   ]
 }
