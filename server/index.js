@@ -10,11 +10,14 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
 
 const app = express();
-const PORT = 3001;
+const PORT = process.env.PORT || 3001;
 
 // Middleware
 app.use(cors());
 app.use(express.json());
+
+// Serve static files from the React build directory
+app.use(express.static(join(__dirname, '../dist')));
 
 // Configure multer for file uploads
 const storage = multer.diskStorage({
@@ -346,9 +349,14 @@ app.get('/api/admin/export', requireAuth, async (req, res) => {
   }
 });
 
+// Handle client-side routing
+app.get('*', (req, res) => {
+  res.sendFile(join(__dirname, '../dist/index.html'));
+});
+
 // Initialize and start server
 initializeData().then(() => {
   app.listen(PORT, () => {
-    console.log(`Server running on http://localhost:${PORT}`);
+    console.log(`Server is running on port ${PORT}`);
   });
 });
