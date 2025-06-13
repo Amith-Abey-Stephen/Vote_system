@@ -49,7 +49,7 @@ const AdminPanel: React.FC<AdminPanelProps> = ({ onSettingsUpdate, onLogout }) =
     const token = localStorage.getItem('adminToken');
     return {
       'Content-Type': 'application/json',
-      'Authorization': `Bearer ${token}`
+      'Authorization': token ? `Bearer ${token}` : ''
     };
   };
 
@@ -217,16 +217,27 @@ const AdminPanel: React.FC<AdminPanelProps> = ({ onSettingsUpdate, onLogout }) =
 
     setLoading(true);
     try {
-      const response = await fetch(`${import.meta.env.VITE_API_URL}/api/candidates/${id}`, {
+      const apiUrl = import.meta.env.VITE_API_URL;
+      if (!apiUrl) {
+        throw new Error('API URL is not configured');
+      }
+
+      const response = await fetch(`${apiUrl}/api/candidates/${id}`, {
         method: 'DELETE',
-        headers: getAuthHeaders()
+        headers: {
+          ...getAuthHeaders(),
+          'Accept': 'application/json'
+        },
+        credentials: 'include'
       });
 
-      const data = await response.json();
-
       if (!response.ok) {
-        throw new Error(data.message || 'Failed to delete candidate');
+        const errorText = await response.text();
+        console.error('Server response:', errorText);
+        throw new Error(`Server error: ${response.status}`);
       }
+
+      const data = await response.json();
 
       if (data.success) {
         // Update the candidates in the stats

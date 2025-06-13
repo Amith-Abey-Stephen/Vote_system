@@ -10,12 +10,29 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
 
 const app = express();
-const PORT = process.env.PORT ;
+const PORT = process.env.PORT;
 console.log(PORT);
 
 // Middleware
+const allowedOrigins = [
+  'http://localhost:5173',
+  'http://localhost:5174',
+  'http://localhost:5175',
+  'https://school-voting-system.vercel.app',
+  'https://vote-system-phi.vercel.app'
+];
+
 app.use(cors({
-  origin: '*',  // Allow all origins during development
+  origin: function(origin, callback) {
+    // Allow requests with no origin (like mobile apps or curl requests)
+    if (!origin) return callback(null, true);
+    
+    if (allowedOrigins.indexOf(origin) === -1) {
+      const msg = 'The CORS policy for this site does not allow access from the specified Origin.';
+      return callback(new Error(msg), false);
+    }
+    return callback(null, true);
+  },
   credentials: true,
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
   allowedHeaders: ['Content-Type', 'Authorization']
@@ -133,10 +150,22 @@ app.post('/api/admin/login', async (req, res) => {
 
 // Middleware to check admin authentication
 function requireAuth(req, res, next) {
-  const token = req.headers.authorization?.replace('Bearer ', '');
+  const authHeader = req.headers.authorization;
+  
+  if (!authHeader || !authHeader.startsWith('Bearer ')) {
+    return res.status(401).json({ 
+      success: false, 
+      message: 'Authentication required' 
+    });
+  }
+
+  const token = authHeader.split(' ')[1];
   
   if (!token || !token.startsWith('admin_')) {
-    return res.status(401).json({ success: false, message: 'Authentication required' });
+    return res.status(401).json({ 
+      success: false, 
+      message: 'Invalid token' 
+    });
   }
   
   next();
