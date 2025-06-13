@@ -2,10 +2,13 @@ services:
   - type: web
     name: school-voting-system-server
     env: node
-    buildCommand: npm install && npm run build
+    rootDir: server
+    buildCommand: npm install
     startCommand: npm start
     envVars:
       - key: NODE_ENV
         value: production
       - key: PORT
-        value: 10000 
+        value: 10000
+      - key: CORS_ORIGIN
+        value: https://your-vercel-app-url.vercel.app 

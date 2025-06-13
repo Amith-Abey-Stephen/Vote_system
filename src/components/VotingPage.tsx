@@ -44,7 +44,7 @@ const VotingPage: React.FC<VotingPageProps> = ({ settings }) => {
 
   const fetchCandidates = async () => {
     try {
-      const response = await fetch('http://localhost:3001/api/candidates');
+      const response = await fetch(`${import.meta.env.VITE_API_URL}/api/candidates`);
       const data = await response.json();
       setCandidates(data);
     } catch (error) {
@@ -59,7 +59,7 @@ const VotingPage: React.FC<VotingPageProps> = ({ settings }) => {
     setError('');
 
     try {
-      const response = await fetch('http://localhost:3001/api/check-voter', {
+      const response = await fetch(`${import.meta.env.VITE_API_URL}/api/check-voter`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(voterInfo)
@@ -92,7 +92,7 @@ const VotingPage: React.FC<VotingPageProps> = ({ settings }) => {
     setError('');
 
     try {
-      const response = await fetch('http://localhost:3001/api/vote', {
+      const response = await fetch(`${import.meta.env.VITE_API_URL}/api/vote`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({

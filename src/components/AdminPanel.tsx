@@ -70,7 +70,7 @@ const AdminPanel: React.FC<AdminPanelProps> = ({ onSettingsUpdate, onLogout }) =
 
   const fetchSettings = async () => {
     try {
-      const response = await fetch('http://localhost:3001/api/settings');
+      const response = await fetch(`${import.meta.env.VITE_API_URL}/api/settings`);
       const data = await response.json();
       setSettings(data);
     } catch (error) {
@@ -80,7 +80,7 @@ const AdminPanel: React.FC<AdminPanelProps> = ({ onSettingsUpdate, onLogout }) =
 
   const fetchStats = async () => {
     try {
-      const response = await fetch('http://localhost:3001/api/admin/stats', {
+      const response = await fetch(`${import.meta.env.VITE_API_URL}/api/admin/stats`, {
         headers: getAuthHeaders()
       });
       
@@ -96,7 +96,7 @@ const AdminPanel: React.FC<AdminPanelProps> = ({ onSettingsUpdate, onLogout }) =
   const toggleVoting = async () => {
     setLoading(true);
     try {
-      const response = await fetch('http://localhost:3001/api/settings', {
+      const response = await fetch(`${import.meta.env.VITE_API_URL}/api/settings`, {
         method: 'POST',
         headers: getAuthHeaders(),
         body: JSON.stringify({ votingEnabled: !settings.votingEnabled })
@@ -126,7 +126,7 @@ const AdminPanel: React.FC<AdminPanelProps> = ({ onSettingsUpdate, onLogout }) =
 
     setLoading(true);
     try {
-      const response = await fetch('http://localhost:3001/api/upload-candidates', {
+      const response = await fetch(`${import.meta.env.VITE_API_URL}/api/upload-candidates`, {
         method: 'POST',
         headers: getAuthHeadersForUpload(),
         body: formData
@@ -155,7 +155,7 @@ const AdminPanel: React.FC<AdminPanelProps> = ({ onSettingsUpdate, onLogout }) =
 
     setLoading(true);
     try {
-      const response = await fetch('http://localhost:3001/api/admin/reset', {
+      const response = await fetch(`${import.meta.env.VITE_API_URL}/api/admin/reset`, {
         method: 'POST',
         headers: getAuthHeaders()
       });
@@ -178,7 +178,7 @@ const AdminPanel: React.FC<AdminPanelProps> = ({ onSettingsUpdate, onLogout }) =
 
   const exportResults = async () => {
     try {
-      const response = await fetch('http://localhost:3001/api/admin/export', {
+      const response = await fetch(`${import.meta.env.VITE_API_URL}/api/admin/export`, {
         headers: getAuthHeaders()
       });
       
