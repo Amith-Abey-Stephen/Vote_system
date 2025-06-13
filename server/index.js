@@ -356,20 +356,44 @@ app.get('/api/admin/export', requireAuth, async (req, res) => {
 app.delete('/api/candidates/:id', requireAuth, async (req, res) => {
   try {
     const { id } = req.params;
+    console.log('Attempting to delete candidate with ID:', id);
+    
     const candidates = await readJsonFile(candidatesFile);
+    console.log('Current candidates:', candidates);
     
     if (!candidates) {
       return res.status(500).json({ success: false, message: 'Failed to load candidates' });
     }
 
+    // Convert id to string for comparison since it might be coming as a number
+    const candidateId = String(id);
+
     // Remove candidate from both headBoy and headGirl arrays
-    candidates.headBoy = candidates.headBoy.filter(c => c.id !== id);
-    candidates.headGirl = candidates.headGirl.filter(c => c.id !== id);
+    const originalHeadBoyLength = candidates.headBoy.length;
+    const originalHeadGirlLength = candidates.headGirl.length;
+
+    candidates.headBoy = candidates.headBoy.filter(c => String(c.id) !== candidateId);
+    candidates.headGirl = candidates.headGirl.filter(c => String(c.id) !== candidateId);
+
+    console.log('After deletion - Head Boy:', candidates.headBoy.length, 'Head Girl:', candidates.headGirl.length);
+
+    // Check if any candidates were actually removed
+    if (candidates.headBoy.length === originalHeadBoyLength && 
+        candidates.headGirl.length === originalHeadGirlLength) {
+      return res.status(404).json({ 
+        success: false, 
+        message: 'Candidate not found' 
+      });
+    }
 
     const success = await writeJsonFile(candidatesFile, candidates);
     
     if (success) {
-      res.json({ success: true, candidates });
+      res.json({ 
+        success: true, 
+        candidates,
+        message: 'Candidate deleted successfully'
+      });
     } else {
       res.status(500).json({ success: false, message: 'Failed to delete candidate' });
     }

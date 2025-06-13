@@ -222,18 +222,25 @@ const AdminPanel: React.FC<AdminPanelProps> = ({ onSettingsUpdate, onLogout }) =
         headers: getAuthHeaders()
       });
 
+      const data = await response.json();
+
       if (!response.ok) {
-        throw new Error('Failed to delete candidate');
+        throw new Error(data.message || 'Failed to delete candidate');
       }
 
-      const data = await response.json();
       if (data.success) {
-        setStats(data.stats);
-        showMessage('success', 'Candidate deleted successfully');
+        // Update the candidates in the stats
+        setStats(prevStats => ({
+          ...prevStats,
+          candidates: data.candidates
+        }));
+        showMessage('success', data.message || 'Candidate deleted successfully');
+      } else {
+        throw new Error(data.message || 'Failed to delete candidate');
       }
     } catch (error) {
       console.error('Error deleting candidate:', error);
-      showMessage('error', 'Failed to delete candidate');
+      showMessage('error', error.message || 'Failed to delete candidate');
     } finally {
       setLoading(false);
     }
