@@ -8,5 +8,15 @@
     "votedAt": "2025-06-13T06:42:19.999Z",
     "headBoyVote": "Rahul",
     "headGirlVote": "devika"
+  },
+  {
+    "voterKey": "amityh_45_45_2005-06-05",
+    "name": "amityh",
+    "class": "45",
+    "division": "45",
+    "dateOfBirth": "2005-06-05",
+    "votedAt": "2025-06-13T06:51:26.376Z",
+    "headBoyVote": "amenda",
+    "headGirlVote": "devika"
   }
 ]
