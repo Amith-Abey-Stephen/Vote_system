@@ -49,7 +49,8 @@ const AdminPanel: React.FC<AdminPanelProps> = ({ onSettingsUpdate, onLogout }) =
     const token = localStorage.getItem('adminToken');
     return {
       'Content-Type': 'application/json',
-      'Authorization': token ? `Bearer ${token}` : ''
+      'Authorization': token ? `Bearer ${token}` : '',
+      'Accept': 'application/json'
     };
   };
 
@@ -228,7 +229,8 @@ const AdminPanel: React.FC<AdminPanelProps> = ({ onSettingsUpdate, onLogout }) =
           ...getAuthHeaders(),
           'Accept': 'application/json'
         },
-        credentials: 'include'
+        mode: 'cors',
+        credentials: 'same-origin'
       });
 
       if (!response.ok) {
