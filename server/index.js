@@ -15,8 +15,10 @@ console.log(PORT);
 
 // Middleware
 app.use(cors({
-  origin: process.env.CORS_ORIGIN || 'http://localhost:5175',
-  credentials: true
+  origin: '*',  // Allow all origins during development
+  credentials: true,
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+  allowedHeaders: ['Content-Type', 'Authorization']
 }));
 app.use(express.json());
 
@@ -350,9 +352,54 @@ app.get('/api/admin/export', requireAuth, async (req, res) => {
   }
 });
 
+// Delete candidate (protected)
+app.delete('/api/candidates/:id', requireAuth, async (req, res) => {
+  try {
+    const { id } = req.params;
+    const candidates = await readJsonFile(candidatesFile);
+    
+    if (!candidates) {
+      return res.status(500).json({ success: false, message: 'Failed to load candidates' });
+    }
+
+    // Remove candidate from both headBoy and headGirl arrays
+    candidates.headBoy = candidates.headBoy.filter(c => c.id !== id);
+    candidates.headGirl = candidates.headGirl.filter(c => c.id !== id);
+
+    const success = await writeJsonFile(candidatesFile, candidates);
+    
+    if (success) {
+      res.json({ success: true, candidates });
+    } else {
+      res.status(500).json({ success: false, message: 'Failed to delete candidate' });
+    }
+  } catch (error) {
+    console.error('Error deleting candidate:', error);
+    res.status(500).json({ success: false, message: 'Error deleting candidate' });
+  }
+});
+
+// Add this before the app.listen call
+app.use((err, req, res, next) => {
+  console.error('Error:', err);
+  res.status(500).json({ 
+    success: false, 
+    message: 'Internal server error',
+    error: process.env.NODE_ENV === 'development' ? err.message : undefined
+  });
+});
+
+// Add a catch-all route for undefined routes
+app.use((req, res) => {
+  res.status(404).json({ 
+    success: false, 
+    message: 'Route not found' 
+  });
+});
+
 // Initialize and start server
 initializeData().then(() => {
   app.listen(PORT, () => {
-    console.log(`Server running on http://localhost:${PORT}`);
+    console.log(`Server is running on port ${PORT}`);
   });
 });

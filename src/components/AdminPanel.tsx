@@ -10,7 +10,8 @@ import {
   ToggleRight,
   AlertCircle,
   CheckCircle,
-  LogOut
+  LogOut,
+  Trash2
 } from 'lucide-react';
 import VoteChart from './VoteChart';
 
@@ -209,6 +210,35 @@ const AdminPanel: React.FC<AdminPanelProps> = ({ onSettingsUpdate, onLogout }) =
     setTimeout(() => setMessage(null), 5000);
   };
 
+  const handleDeleteCandidate = async (id: string) => {
+    if (!window.confirm('Are you sure you want to delete this candidate?')) {
+      return;
+    }
+
+    setLoading(true);
+    try {
+      const response = await fetch(`${import.meta.env.VITE_API_URL}/api/candidates/${id}`, {
+        method: 'DELETE',
+        headers: getAuthHeaders()
+      });
+
+      if (!response.ok) {
+        throw new Error('Failed to delete candidate');
+      }
+
+      const data = await response.json();
+      if (data.success) {
+        setStats(data.stats);
+        showMessage('success', 'Candidate deleted successfully');
+      }
+    } catch (error) {
+      console.error('Error deleting candidate:', error);
+      showMessage('error', 'Failed to delete candidate');
+    } finally {
+      setLoading(false);
+    }
+  };
+
   return (
     <div className="max-w-7xl mx-auto p-6">
       <div className="bg-white rounded-xl shadow-lg">
@@ -358,31 +388,39 @@ const AdminPanel: React.FC<AdminPanelProps> = ({ onSettingsUpdate, onLogout }) =
 
               {stats && (
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                  <div className="bg-blue-50 rounded-lg p-6">
-                    <h4 className="text-lg font-semibold text-blue-900 mb-3">Head Boy Candidates</h4>
+                  <div className="bg-white rounded-lg shadow p-6">
+                    <h3 className="text-lg font-semibold mb-4">Head Boy Candidates</h3>
                     <div className="space-y-2">
-                      {stats.candidates.headBoy.map((candidate, index) => (
-                        <div key={index} className="bg-white p-3 rounded-lg">
-                          <span className="font-medium">{candidate.name}</span>
+                      {stats.candidates.headBoy.map(candidate => (
+                        <div key={candidate.id} className="flex items-center justify-between p-2 bg-gray-50 rounded">
+                          <span>{candidate.name}</span>
+                          <button
+                            onClick={() => handleDeleteCandidate(candidate.id)}
+                            className="text-red-600 hover:text-red-800 p-1"
+                            title="Delete candidate"
+                          >
+                            <Trash2 className="h-4 w-4" />
+                          </button>
                         </div>
                       ))}
-                      {stats.candidates.headBoy.length === 0 && (
-                        <p className="text-gray-500 italic">No candidates uploaded yet</p>
-                      )}
                     </div>
                   </div>
 
-                  <div className="bg-pink-50 rounded-lg p-6">
-                    <h4 className="text-lg font-semibold text-pink-900 mb-3">Head Girl Candidates</h4>
+                  <div className="bg-white rounded-lg shadow p-6">
+                    <h3 className="text-lg font-semibold mb-4">Head Girl Candidates</h3>
                     <div className="space-y-2">
-                      {stats.candidates.headGirl.map((candidate, index) => (
-                        <div key={index} className="bg-white p-3 rounded-lg">
-                          <span className="font-medium">{candidate.name}</span>
+                      {stats.candidates.headGirl.map(candidate => (
+                        <div key={candidate.id} className="flex items-center justify-between p-2 bg-gray-50 rounded">
+                          <span>{candidate.name}</span>
+                          <button
+                            onClick={() => handleDeleteCandidate(candidate.id)}
+                            className="text-red-600 hover:text-red-800 p-1"
+                            title="Delete candidate"
+                          >
+                            <Trash2 className="h-4 w-4" />
+                          </button>
                         </div>
                       ))}
-                      {stats.candidates.headGirl.length === 0 && (
-                        <p className="text-gray-500 italic">No candidates uploaded yet</p>
-                      )}
                     </div>
                   </div>
                 </div>
