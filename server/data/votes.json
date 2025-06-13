@@ -1,4 +1,8 @@
 {
-  "headBoy": {},
-  "headGirl": {}
+  "headBoy": {
+    "Rahul": 1
+  },
+  "headGirl": {
+    "devika": 1
+  }
 }

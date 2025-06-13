@@ -1,4 +1,41 @@
 {
-  "headBoy": [],
-  "headGirl": []
+  "headBoy": [
+    {
+      "id": 1749796925044.9663,
+      "name": "Rahul",
+      "gender": "male"
+    },
+    {
+      "id": 1749796925044.0479,
+      "name": "amenda",
+      "gender": "male"
+    },
+    {
+      "id": 1749796925044.9473,
+      "name": "ram",
+      "gender": "male"
+    },
+    {
+      "id": 1749796925044.9124,
+      "name": "shekar",
+      "gender": "male"
+    }
+  ],
+  "headGirl": [
+    {
+      "id": 1749796925044.2803,
+      "name": "Proya",
+      "gender": "female"
+    },
+    {
+      "id": 1749796925044.9062,
+      "name": "devika",
+      "gender": "female"
+    },
+    {
+      "id": 1749796925044.8562,
+      "name": "anegl",
+      "gender": "female"
+    }
+  ]
 }
