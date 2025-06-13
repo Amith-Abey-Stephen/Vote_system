@@ -1,9 +1,11 @@
 services:
   - type: web
-    name: school-voting-system
+    name: school-voting-system-server
     env: node
-    buildCommand: npm install && npm run build
-    startCommand: npm start
+    buildCommand: npm install
+    startCommand: node server/index.js
     envVars:
       - key: NODE_ENV
-        value: production 
+        value: production
+      - key: PORT
+        value: 10000 
