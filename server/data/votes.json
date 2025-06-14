@@ -1,6 +1,15 @@
 {
   "headBoy": {
+    "Rahul": 1
   },
   "headGirl": {
+    "Proya": 1,
+    "amenda": 2
+  },
+  "sportsCaptain": {
+    "ram": 2
+  },
+  "sportsViceCaptain": {
+    "shekar": 2
   }
 }

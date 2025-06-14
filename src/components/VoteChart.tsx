@@ -7,7 +7,7 @@ ChartJS.register(CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend)
 interface VoteChartProps {
   title: string;
   data: Record<string, number>;
-  color: 'blue' | 'pink';
+  color: 'blue' | 'pink' | 'yellow' | 'orange';
 }
 
 const VoteChart: React.FC<VoteChartProps> = ({ title, data, color }) => {
@@ -19,6 +19,14 @@ const VoteChart: React.FC<VoteChartProps> = ({ title, data, color }) => {
     pink: {
       background: 'rgba(236, 72, 153, 0.5)',
       border: 'rgba(236, 72, 153, 1)',
+    },
+    yellow: {
+      background: 'rgba(245, 158, 11, 0.5)',
+      border: 'rgba(245, 158, 11, 1)',
+    },
+    orange: {
+      background: 'rgba(249, 115, 22, 0.5)',
+      border: 'rgba(249, 115, 22, 1)',
     }
   };
 

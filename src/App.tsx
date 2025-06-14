@@ -23,16 +23,11 @@ function App() {
 
   const fetchSettings = async () => {
     try {
-      const response = await fetch(`${import.meta.env.VITE_API_URL}/api/settings`);
-      if (!response.ok) {
-        throw new Error(`HTTP error! status: ${response.status}`);
-      }
+      const response = await fetch('http://localhost:3001/api/settings');
       const data = await response.json();
       setSettings(data);
     } catch (error) {
       console.error('Error fetching settings:', error);
-      // Set default settings if fetch fails
-      setSettings({ votingEnabled: false });
     }
   };
 

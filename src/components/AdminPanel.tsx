@@ -11,6 +11,8 @@ import {
   AlertCircle,
   CheckCircle,
   LogOut,
+  Trophy,
+  Medal,
   Trash2
 } from 'lucide-react';
 import VoteChart from './VoteChart';
@@ -24,14 +26,20 @@ interface StatsData {
   votes: {
     headBoy: Record<string, number>;
     headGirl: Record<string, number>;
+    sportsCaptain: Record<string, number>;
+    sportsViceCaptain: Record<string, number>;
   };
   totalVoters: number;
   students: any[];
   candidates: {
     headBoy: any[];
     headGirl: any[];
+    sportsCaptain: any[];
+    sportsViceCaptain: any[];
   };
 }
+
+const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:3001';
 
 const AdminPanel: React.FC<AdminPanelProps> = ({ onSettingsUpdate, onLogout }) => {
   const [activeTab, setActiveTab] = useState<'settings' | 'candidates' | 'stats' | 'voters'>('settings');
@@ -49,8 +57,7 @@ const AdminPanel: React.FC<AdminPanelProps> = ({ onSettingsUpdate, onLogout }) =
     const token = localStorage.getItem('adminToken');
     return {
       'Content-Type': 'application/json',
-      'Authorization': token ? `Bearer ${token}` : '',
-      'Accept': 'application/json'
+      'Authorization': `Bearer ${token}`
     };
   };
 
@@ -72,7 +79,7 @@ const AdminPanel: React.FC<AdminPanelProps> = ({ onSettingsUpdate, onLogout }) =
 
   const fetchSettings = async () => {
     try {
-      const response = await fetch(`${import.meta.env.VITE_API_URL}/api/settings`);
+      const response = await fetch(`${API_URL}/api/settings`);
       const data = await response.json();
       setSettings(data);
     } catch (error) {
@@ -82,7 +89,7 @@ const AdminPanel: React.FC<AdminPanelProps> = ({ onSettingsUpdate, onLogout }) =
 
   const fetchStats = async () => {
     try {
-      const response = await fetch(`${import.meta.env.VITE_API_URL}/api/admin/stats`, {
+      const response = await fetch(`${API_URL}/api/admin/stats`, {
         headers: getAuthHeaders()
       });
       
@@ -98,7 +105,7 @@ const AdminPanel: React.FC<AdminPanelProps> = ({ onSettingsUpdate, onLogout }) =
   const toggleVoting = async () => {
     setLoading(true);
     try {
-      const response = await fetch(`${import.meta.env.VITE_API_URL}/api/settings`, {
+      const response = await fetch(`${API_URL}/api/settings`, {
         method: 'POST',
         headers: getAuthHeaders(),
         body: JSON.stringify({ votingEnabled: !settings.votingEnabled })
@@ -128,7 +135,7 @@ const AdminPanel: React.FC<AdminPanelProps> = ({ onSettingsUpdate, onLogout }) =
 
     setLoading(true);
     try {
-      const response = await fetch(`${import.meta.env.VITE_API_URL}/api/upload-candidates`, {
+      const response = await fetch(`${API_URL}/api/upload-candidates`, {
         method: 'POST',
         headers: getAuthHeadersForUpload(),
         body: formData
@@ -138,7 +145,7 @@ const AdminPanel: React.FC<AdminPanelProps> = ({ onSettingsUpdate, onLogout }) =
 
       const data = await response.json();
       if (data.success) {
-        showMessage('success', 'Candidates uploaded successfully');
+        showMessage('success', data.message || 'Candidates uploaded successfully');
         fetchStats();
       } else {
         showMessage('error', data.message || 'Failed to upload candidates');
@@ -157,7 +164,7 @@ const AdminPanel: React.FC<AdminPanelProps> = ({ onSettingsUpdate, onLogout }) =
 
     setLoading(true);
     try {
-      const response = await fetch(`${import.meta.env.VITE_API_URL}/api/admin/reset`, {
+      const response = await fetch(`${API_URL}/api/admin/reset`, {
         method: 'POST',
         headers: getAuthHeaders()
       });
@@ -180,7 +187,7 @@ const AdminPanel: React.FC<AdminPanelProps> = ({ onSettingsUpdate, onLogout }) =
 
   const exportResults = async () => {
     try {
-      const response = await fetch(`${import.meta.env.VITE_API_URL}/api/admin/export`, {
+      const response = await fetch(`${API_URL}/api/admin/export`, {
         headers: getAuthHeaders()
       });
       
@@ -193,9 +200,8 @@ const AdminPanel: React.FC<AdminPanelProps> = ({ onSettingsUpdate, onLogout }) =
       a.download = `voting-results-${new Date().toISOString().split('T')[0]}.json`;
       document.body.appendChild(a);
       a.click();
-      document.body.removeChild(a);
       window.URL.revokeObjectURL(url);
-      showMessage('success', 'Results exported successfully');
+      document.body.removeChild(a);
     } catch (error) {
       showMessage('error', 'Failed to export results');
     }
@@ -211,49 +217,53 @@ const AdminPanel: React.FC<AdminPanelProps> = ({ onSettingsUpdate, onLogout }) =
     setTimeout(() => setMessage(null), 5000);
   };
 
-  const handleDeleteCandidate = async (id: string) => {
-    if (!window.confirm('Are you sure you want to delete this candidate?')) {
-      return;
-    }
+  const handleDeleteCandidate = async (position: string, id: number) => {
+    if (!confirm('Are you sure you want to delete this candidate?')) return;
 
     setLoading(true);
     try {
-      const apiUrl = import.meta.env.VITE_API_URL;
-      if (!apiUrl) {
-        throw new Error('API URL is not configured');
-      }
-
-      const response = await fetch(`${apiUrl}/api/candidates/${id}`, {
+      const response = await fetch(`${API_URL}/api/candidates/${position}/${id}`, {
         method: 'DELETE',
-        headers: {
-          ...getAuthHeaders(),
-          'Accept': 'application/json'
-        },
-        mode: 'cors',
-        credentials: 'same-origin'
+        headers: getAuthHeaders()
       });
 
-      if (!response.ok) {
-        const errorText = await response.text();
-        console.error('Server response:', errorText);
-        throw new Error(`Server error: ${response.status}`);
-      }
+      if (handleAuthError(response)) return;
 
       const data = await response.json();
-
       if (data.success) {
-        // Update the candidates in the stats
-        setStats(prevStats => ({
-          ...prevStats,
-          candidates: data.candidates
-        }));
-        showMessage('success', data.message || 'Candidate deleted successfully');
+        showMessage('success', 'Candidate deleted successfully');
+        fetchStats();
       } else {
-        throw new Error(data.message || 'Failed to delete candidate');
+        showMessage('error', data.message || 'Failed to delete candidate');
       }
     } catch (error) {
-      console.error('Error deleting candidate:', error);
-      showMessage('error', error.message || 'Failed to delete candidate');
+      showMessage('error', 'Failed to delete candidate');
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleDeleteAllCandidates = async () => {
+    if (!confirm('Are you sure you want to delete ALL candidates? This action cannot be undone.')) return;
+
+    setLoading(true);
+    try {
+      const response = await fetch(`${API_URL}/api/candidates`, {
+        method: 'DELETE',
+        headers: getAuthHeaders()
+      });
+
+      if (handleAuthError(response)) return;
+
+      const data = await response.json();
+      if (data.success) {
+        showMessage('success', 'All candidates deleted successfully');
+        fetchStats();
+      } else {
+        showMessage('error', data.message || 'Failed to delete candidates');
+      }
+    } catch (error) {
+      showMessage('error', 'Failed to delete candidates');
     } finally {
       setLoading(false);
     }
@@ -382,14 +392,29 @@ const AdminPanel: React.FC<AdminPanelProps> = ({ onSettingsUpdate, onLogout }) =
           {activeTab === 'candidates' && (
             <div className="space-y-6">
               <div className="bg-gray-50 rounded-lg p-6">
-                <h3 className="text-lg font-semibold text-gray-900 mb-4">Upload Candidates</h3>
+                <div className="flex justify-between items-center mb-4">
+                  <h3 className="text-lg font-semibold text-gray-900">Upload Candidates</h3>
+                  <button
+                    onClick={handleDeleteAllCandidates}
+                    disabled={loading}
+                    className="bg-red-600 text-white px-4 py-2 rounded-lg hover:bg-red-700 disabled:opacity-50 disabled:cursor-not-allowed flex items-center space-x-2"
+                  >
+                    <Trash2 className="h-4 w-4" />
+                    <span>Delete All Candidates</span>
+                  </button>
+                </div>
                 <div className="border-2 border-dashed border-gray-300 rounded-lg p-6 text-center">
                   <Upload className="h-12 w-12 text-gray-400 mx-auto mb-4" />
                   <div className="space-y-2">
                     <p className="text-gray-600">Upload an Excel file with candidate data</p>
                     <p className="text-sm text-gray-500">
-                      File must contain a sheet named "Candidates" with columns: name, gender
+                      File must contain a sheet named "Candidates" with columns: name, position
                     </p>
+                    <div className="text-xs text-gray-400 mt-2">
+                      <p><strong>Accepted positions:</strong></p>
+                      <p>• Head Boy, Head Girl</p>
+                      <p>• Sports Captain, Sports Vice Captain</p>
+                    </div>
                   </div>
                   <label className="mt-4 inline-block">
                     <input
@@ -408,39 +433,93 @@ const AdminPanel: React.FC<AdminPanelProps> = ({ onSettingsUpdate, onLogout }) =
 
               {stats && (
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                  <div className="bg-white rounded-lg shadow p-6">
-                    <h3 className="text-lg font-semibold mb-4">Head Boy Candidates</h3>
+                  <div className="bg-blue-50 rounded-lg p-6">
+                    <h4 className="text-lg font-semibold text-blue-900 mb-3">Head Boy Candidates</h4>
                     <div className="space-y-2">
-                      {stats.candidates.headBoy.map(candidate => (
-                        <div key={candidate.id} className="flex items-center justify-between p-2 bg-gray-50 rounded">
-                          <span>{candidate.name}</span>
+                      {stats.candidates.headBoy.map((candidate) => (
+                        <div key={candidate.id} className="bg-white p-3 rounded-lg flex justify-between items-center">
+                          <span className="font-medium">{candidate.name}</span>
                           <button
-                            onClick={() => handleDeleteCandidate(candidate.id)}
-                            className="text-red-600 hover:text-red-800 p-1"
-                            title="Delete candidate"
+                            onClick={() => handleDeleteCandidate('headBoy', candidate.id)}
+                            disabled={loading}
+                            className="text-red-600 hover:text-red-700 disabled:opacity-50"
                           >
                             <Trash2 className="h-4 w-4" />
                           </button>
                         </div>
                       ))}
+                      {stats.candidates.headBoy.length === 0 && (
+                        <p className="text-gray-500 italic">No candidates uploaded yet</p>
+                      )}
                     </div>
                   </div>
 
-                  <div className="bg-white rounded-lg shadow p-6">
-                    <h3 className="text-lg font-semibold mb-4">Head Girl Candidates</h3>
+                  <div className="bg-pink-50 rounded-lg p-6">
+                    <h4 className="text-lg font-semibold text-pink-900 mb-3">Head Girl Candidates</h4>
                     <div className="space-y-2">
-                      {stats.candidates.headGirl.map(candidate => (
-                        <div key={candidate.id} className="flex items-center justify-between p-2 bg-gray-50 rounded">
-                          <span>{candidate.name}</span>
+                      {stats.candidates.headGirl.map((candidate) => (
+                        <div key={candidate.id} className="bg-white p-3 rounded-lg flex justify-between items-center">
+                          <span className="font-medium">{candidate.name}</span>
                           <button
-                            onClick={() => handleDeleteCandidate(candidate.id)}
-                            className="text-red-600 hover:text-red-800 p-1"
-                            title="Delete candidate"
+                            onClick={() => handleDeleteCandidate('headGirl', candidate.id)}
+                            disabled={loading}
+                            className="text-red-600 hover:text-red-700 disabled:opacity-50"
                           >
                             <Trash2 className="h-4 w-4" />
                           </button>
                         </div>
                       ))}
+                      {stats.candidates.headGirl.length === 0 && (
+                        <p className="text-gray-500 italic">No candidates uploaded yet</p>
+                      )}
+                    </div>
+                  </div>
+
+                  <div className="bg-yellow-50 rounded-lg p-6">
+                    <h4 className="text-lg font-semibold text-yellow-900 mb-3 flex items-center">
+                      <Trophy className="h-5 w-5 mr-2" />
+                      Sports Captain Candidates
+                    </h4>
+                    <div className="space-y-2">
+                      {stats.candidates.sportsCaptain.map((candidate) => (
+                        <div key={candidate.id} className="bg-white p-3 rounded-lg flex justify-between items-center">
+                          <span className="font-medium">{candidate.name}</span>
+                          <button
+                            onClick={() => handleDeleteCandidate('sportsCaptain', candidate.id)}
+                            disabled={loading}
+                            className="text-red-600 hover:text-red-700 disabled:opacity-50"
+                          >
+                            <Trash2 className="h-4 w-4" />
+                          </button>
+                        </div>
+                      ))}
+                      {stats.candidates.sportsCaptain.length === 0 && (
+                        <p className="text-gray-500 italic">No candidates uploaded yet</p>
+                      )}
+                    </div>
+                  </div>
+
+                  <div className="bg-orange-50 rounded-lg p-6">
+                    <h4 className="text-lg font-semibold text-orange-900 mb-3 flex items-center">
+                      <Medal className="h-5 w-5 mr-2" />
+                      Sports Vice Captain Candidates
+                    </h4>
+                    <div className="space-y-2">
+                      {stats.candidates.sportsViceCaptain.map((candidate) => (
+                        <div key={candidate.id} className="bg-white p-3 rounded-lg flex justify-between items-center">
+                          <span className="font-medium">{candidate.name}</span>
+                          <button
+                            onClick={() => handleDeleteCandidate('sportsViceCaptain', candidate.id)}
+                            disabled={loading}
+                            className="text-red-600 hover:text-red-700 disabled:opacity-50"
+                          >
+                            <Trash2 className="h-4 w-4" />
+                          </button>
+                        </div>
+                      ))}
+                      {stats.candidates.sportsViceCaptain.length === 0 && (
+                        <p className="text-gray-500 italic">No candidates uploaded yet</p>
+                      )}
                     </div>
                   </div>
                 </div>
@@ -450,7 +529,7 @@ const AdminPanel: React.FC<AdminPanelProps> = ({ onSettingsUpdate, onLogout }) =
 
           {activeTab === 'stats' && stats && (
             <div className="space-y-6">
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+              <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
                 <div className="bg-blue-50 rounded-lg p-6 text-center">
                   <div className="text-3xl font-bold text-blue-600">{stats.totalVoters}</div>
                   <div className="text-blue-800 font-medium">Total Votes Cast</div>
@@ -467,6 +546,13 @@ const AdminPanel: React.FC<AdminPanelProps> = ({ onSettingsUpdate, onLogout }) =
                   </div>
                   <div className="text-pink-800 font-medium">Head Girl Votes</div>
                 </div>
+                <div className="bg-yellow-50 rounded-lg p-6 text-center">
+                  <div className="text-3xl font-bold text-yellow-600">
+                    {Object.values(stats.votes.sportsCaptain).reduce((a, b) => a + b, 0) + 
+                     Object.values(stats.votes.sportsViceCaptain).reduce((a, b) => a + b, 0)}
+                  </div>
+                  <div className="text-yellow-800 font-medium">Sports Votes</div>
+                </div>
               </div>
 
               <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
@@ -479,6 +565,16 @@ const AdminPanel: React.FC<AdminPanelProps> = ({ onSettingsUpdate, onLogout }) =
                   title="Head Girl Votes"
                   data={stats.votes.headGirl}
                   color="pink"
+                />
+                <VoteChart
+                  title="Sports Captain Votes"
+                  data={stats.votes.sportsCaptain}
+                  color="yellow"
+                />
+                <VoteChart
+                  title="Sports Vice Captain Votes"
+                  data={stats.votes.sportsViceCaptain}
+                  color="orange"
                 />
               </div>
             </div>

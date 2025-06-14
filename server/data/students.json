@@ -1,3 +1,41 @@
 [
-  
+  {
+    "voterKey": "35d90337efc2e1d98b378e74ac82692979a2914f9384e204a8c3a7f366b5df13",
+    "name": "amith",
+    "class": "12",
+    "division": "a",
+    "dateOfBirth": "2005-05-26",
+    "votedAt": "2025-06-14T11:25:22.172Z",
+    "headBoyVote": null,
+    "headGirlVote": "Proya",
+    "sportsCaptainVote": "ram",
+    "sportsViceCaptainVote": null,
+    "sessionToken": "9e5343ab"
+  },
+  {
+    "voterKey": "01fc0042691e24bbd61ccd391dd4c0914c62301a11c1f6b68c368d2d1c1b1adc",
+    "name": "amith",
+    "class": "12",
+    "division": "a",
+    "dateOfBirth": "2005-05-20",
+    "votedAt": "2025-06-14T11:25:47.098Z",
+    "headBoyVote": "Rahul",
+    "headGirlVote": "amenda",
+    "sportsCaptainVote": null,
+    "sportsViceCaptainVote": "shekar",
+    "sessionToken": "6df91946"
+  },
+  {
+    "voterKey": "8a31e24b79292d0d36f7f0e85347230cc609a91a397740ce473b87a77a333e81",
+    "name": "amith",
+    "class": "12",
+    "division": "a",
+    "dateOfBirth": "2004-05-26",
+    "votedAt": "2025-06-14T11:42:37.513Z",
+    "headBoyVote": null,
+    "headGirlVote": "amenda",
+    "sportsCaptainVote": "ram",
+    "sportsViceCaptainVote": "shekar",
+    "sessionToken": "4208e013"
+  }
 ]

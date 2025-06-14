@@ -1,8 +1,34 @@
 {
   "headBoy": [
-    
+    {
+      "id": 1749901173909.681,
+      "name": "Rahul",
+      "position": "headBoy",
+      "gender": ""
+    }
   ],
   "headGirl": [
-   
+    {
+      "id": 1749901173909.6296,
+      "name": "amenda",
+      "position": "headGirl",
+      "gender": ""
+    }
+  ],
+  "sportsCaptain": [
+    {
+      "id": 1749901173909.566,
+      "name": "ram",
+      "position": "sportsCaptain",
+      "gender": ""
+    }
+  ],
+  "sportsViceCaptain": [
+    {
+      "id": 1749901173917.056,
+      "name": "shekar",
+      "position": "sportsViceCaptain",
+      "gender": ""
+    }
   ]
 }
