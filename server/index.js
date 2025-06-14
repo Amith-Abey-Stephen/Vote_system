@@ -15,9 +15,7 @@ const PORT = process.env.PORT || 3001;
 
 // Middleware
 app.use(cors({
-  origin: process.env.NODE_ENV === 'production' 
-    ? ['https://yourvote.vercel.app', 'http://localhost:5173', 'http://localhost:5174', 'http://localhost:5175' ]
-    : 'http://localhost:5173',
+  origin: ['https://yourvote.vercel.app', 'http://localhost:5173', 'http://localhost:5174', 'http://localhost:5175'],
   credentials: true
 }));
 app.use(express.json());
@@ -122,7 +120,7 @@ function rateLimit(req, res, next) {
   const clientIP = req.ip || req.connection.remoteAddress || 'unknown';
   const now = Date.now();
   const windowMs = 60000; // 1 minute
-  const maxRequests = 20; // Increased from 10 to 20 requests per minute per IP
+  const maxRequests = 50; // Increased from 10 to 20 requests per minute per IP
   
   if (!rateLimitMap.has(clientIP)) {
     rateLimitMap.set(clientIP, { count: 1, resetTime: now + windowMs });
