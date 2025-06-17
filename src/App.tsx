@@ -5,6 +5,7 @@ import AdminPanel from './components/AdminPanel';
 import AdminLogin from './components/AdminLogin';
 import { Vote, Settings, Users } from 'lucide-react';
 import { API_URL } from './config';
+import header_logo from './assets/header-logo.png';
 
 function App() {
   const [settings, setSettings] = useState<{ votingEnabled: boolean } | null>(null);
@@ -57,15 +58,16 @@ function App() {
         <header className="bg-white shadow-sm border-b">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div className="flex justify-between items-center py-4">
-              <div className="flex items-center space-x-3">
-                <div className="bg-blue-600 rounded-lg p-2">
-                  <Vote className="h-6 w-6 text-white" />
-                </div>
-                <div>
-                  <h1 className="text-xl font-bold text-gray-900">School Election System</h1>
-                  <p className="text-sm text-gray-600">Head Boy & Head Girl Elections</p>
+              <div className="flex items-center">
+                <img src={header_logo} className="h-12 w-auto" />
+              </div>
+              <div className="flex-1 flex justify-center">
+                <div className="flex flex-col items-center">
+                  <h1 className="hidden sm:block text-xl font-bold text-gray-900">Election System</h1>
+                  <p className="hidden sm:block text-sm text-gray-600">Head Boy & Head Girl Elections</p>
                 </div>
               </div>
+              <div className="w-12"></div> {/* Spacer to balance the layout */}
               <div className="flex items-center space-x-4">
                 <div className={`px-3 py-1 rounded-full text-sm font-medium ${
                   settings.votingEnabled 
