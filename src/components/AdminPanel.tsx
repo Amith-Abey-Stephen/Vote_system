@@ -16,6 +16,7 @@ import {
   Trash2
 } from 'lucide-react';
 import VoteChart from './VoteChart';
+import { API_URL } from '../config';
 
 interface AdminPanelProps {
   onSettingsUpdate: () => void;
@@ -38,8 +39,6 @@ interface StatsData {
     sportsViceCaptain: any[];
   };
 }
-
-const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:3001';
 
 const AdminPanel: React.FC<AdminPanelProps> = ({ onSettingsUpdate, onLogout }) => {
   const [activeTab, setActiveTab] = useState<'settings' | 'candidates' | 'stats' | 'voters'>('settings');

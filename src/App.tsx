@@ -4,6 +4,7 @@ import VotingPage from './components/VotingPage';
 import AdminPanel from './components/AdminPanel';
 import AdminLogin from './components/AdminLogin';
 import { Vote, Settings, Users } from 'lucide-react';
+import { API_URL } from './config';
 
 function App() {
   const [settings, setSettings] = useState<{ votingEnabled: boolean } | null>(null);
@@ -23,7 +24,7 @@ function App() {
 
   const fetchSettings = async () => {
     try {
-      const response = await fetch('http://localhost:3001/api/settings');
+      const response = await fetch(`${API_URL}/api/settings`);
       const data = await response.json();
       setSettings(data);
     } catch (error) {

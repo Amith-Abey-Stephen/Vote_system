@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { CheckCircle, UserCheck, Users, AlertCircle, Shield, Clock, Info, Trophy, Medal } from 'lucide-react';
+import { API_URL } from '../config';
 
 interface Candidate {
   id: number;
@@ -25,8 +26,6 @@ interface VoterInfo {
   division: string;
   dateOfBirth: string;
 }
-
-const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:3001';
 
 const VotingPage: React.FC<VotingPageProps> = ({ settings }) => {
   const [step, setStep] = useState<'verification' | 'voting' | 'success'>('verification');

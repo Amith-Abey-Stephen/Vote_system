@@ -1,0 +1,1 @@
+export const API_URL = 'https://school-voting-system-server.onrender.com'; 
