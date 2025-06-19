@@ -675,29 +675,109 @@ app.post('/api/admin/reset', requireAuth, async (req, res) => {
 // Export votes (protected)
 app.get('/api/admin/export', requireAuth, async (req, res) => {
   try {
+    console.log('Export request received');
+    
     const votes = await readJsonFile(votesFile);
     const students = await readJsonFile(studentsFile);
     const candidates = await readJsonFile(candidatesFile);
     
-    const exportData = {
-      exportDate: new Date().toISOString(),
-      totalVoters: students.length,
-      votes,
-      candidates,
-      votersList: students.map(student => ({
-        name: student.name,
-        class: student.class,
-        division: student.division,
-        votedAt: student.votedAt
-      }))
-    };
+    console.log('Data loaded:', { 
+      votesCount: Object.keys(votes).length, 
+      studentsCount: students.length, 
+      candidatesCount: Object.keys(candidates).length 
+    });
     
-    res.setHeader('Content-Type', 'application/json');
-    res.setHeader('Content-Disposition', 'attachment; filename=voting-results.json');
-    res.json(exportData);
+    // Create a new workbook
+    const workbook = XLSX.utils.book_new();
+    
+    // Sheet 1: Voting Results Summary
+    const resultsData = [];
+    const positions = ['headBoy', 'headGirl', 'sportsCaptain', 'sportsViceCaptain'];
+    
+    positions.forEach(position => {
+      const positionVotes = votes[position] || {};
+      const positionCandidates = candidates[position] || [];
+      
+      // Sort candidates by vote count (highest first)
+      const sortedCandidates = positionCandidates.sort((a, b) => {
+        const votesA = positionVotes[a.name] || 0;
+        const votesB = positionVotes[b.name] || 0;
+        return votesB - votesA;
+      });
+      
+      sortedCandidates.forEach((candidate, index) => {
+        const voteCount = positionVotes[candidate.name] || 0;
+        const percentage = students.length > 0 ? ((voteCount / students.length) * 100).toFixed(2) : 0;
+        const isWinner = index === 0 && voteCount > 0;
+        
+        resultsData.push({
+          'Position': position.charAt(0).toUpperCase() + position.slice(1).replace(/([A-Z])/g, ' $1'),
+          'Candidate Name': candidate.name,
+          'Votes Received': voteCount,
+          'Percentage': percentage + '%',
+          'Rank': index + 1,
+          'Status': isWinner ? 'WINNER' : voteCount > 0 ? 'Runner-up' : 'No votes'
+        });
+      });
+      
+      // Add a blank row between positions
+      if (positionCandidates.length > 0) {
+        resultsData.push({ 'Position': '', 'Candidate Name': '', 'Votes Received': '', 'Percentage': '', 'Rank': '', 'Status': '' });
+      }
+    });
+    
+    const resultsSheet = XLSX.utils.json_to_sheet(resultsData);
+    XLSX.utils.book_append_sheet(workbook, resultsSheet, 'Voting Results');
+    
+    // Sheet 2: Voter Details
+    const voterData = students.map(student => ({
+      'Voter Name': student.name,
+      'Class': student.class,
+      'Division': student.division,
+      'Voted At': student.votedAt ? new Date(student.votedAt).toLocaleString('en-IN') : 'Not voted',
+      'Status': student.votedAt ? 'Voted' : 'Not voted'
+    }));
+    
+    const voterSheet = XLSX.utils.json_to_sheet(voterData);
+    XLSX.utils.book_append_sheet(workbook, voterSheet, 'Voter Details');
+    
+    // Sheet 3: Statistics Summary
+    const totalVoters = students.length;
+    const totalVoted = students.filter(s => s.votedAt).length;
+    const votingPercentage = totalVoters > 0 ? ((totalVoted / totalVoters) * 100).toFixed(2) : 0;
+    
+    const statsData = [
+      { 'Metric': 'Total Registered Voters', 'Value': totalVoters },
+      { 'Metric': 'Total Votes Cast', 'Value': totalVoted },
+      { 'Metric': 'Voting Percentage', 'Value': votingPercentage + '%' },
+      { 'Metric': 'Export Date', 'Value': new Date().toLocaleString('en-IN') }
+    ];
+    
+    const statsSheet = XLSX.utils.json_to_sheet(statsData);
+    XLSX.utils.book_append_sheet(workbook, statsSheet, 'Statistics Summary');
+    
+    console.log('Workbook created with', workbook.SheetNames.length, 'sheets');
+    
+    // Generate the Excel file
+    const excelBuffer = XLSX.write(workbook, { type: 'buffer', bookType: 'xlsx' });
+    
+    console.log('Excel buffer created, size:', excelBuffer.length, 'bytes');
+    
+    // Set response headers for file download
+    res.setHeader('Content-Type', 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
+    res.setHeader('Content-Disposition', `attachment; filename=School-Election-Results-${new Date().toISOString().split('T')[0]}.xlsx`);
+    res.setHeader('Content-Length', excelBuffer.length);
+    res.setHeader('Cache-Control', 'no-cache');
+    res.setHeader('Access-Control-Expose-Headers', 'Content-Disposition');
+    
+    console.log('Headers set, sending response');
+    res.send(excelBuffer);
+    
   } catch (error) {
     console.error('Error exporting data:', error);
-    res.status(500).json({ success: false, message: 'Error exporting data' });
+    // Don't send JSON error response, send a simple error message
+    res.status(500).setHeader('Content-Type', 'text/plain');
+    res.send('Error exporting data: ' + error.message);
   }
 });
 

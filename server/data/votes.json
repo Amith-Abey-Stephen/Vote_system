@@ -1,13 +1,18 @@
 {
   "headBoy": {
-    "Rahul": 1
+    "Rahul": 1,
+    "Ananthakrishnan A": 1,
+    "Athul Krishna": 2
   },
   "headGirl": {
     "Proya": 1,
-    "amenda": 2
+    "amenda": 2,
+    "Vismaya Rajeev": 2,
+    "Gatha Ajai Nair": 1
   },
   "sportsCaptain": {
-    "ram": 2
+    "ram": 2,
+    "Aadhil Alias Binoy": 3
   },
   "sportsViceCaptain": {
     "shekar": 2

@@ -185,6 +185,7 @@ const AdminPanel: React.FC<AdminPanelProps> = ({ onSettingsUpdate, onLogout }) =
   };
 
   const exportResults = async () => {
+    setLoading(true);
     try {
       const response = await fetch(`${API_URL}/api/admin/export`, {
         headers: getAuthHeaders()
@@ -192,17 +193,46 @@ const AdminPanel: React.FC<AdminPanelProps> = ({ onSettingsUpdate, onLogout }) =
       
       if (handleAuthError(response)) return;
       
+      if (!response.ok) {
+        const errorText = await response.text();
+        throw new Error(`HTTP error! status: ${response.status}, message: ${errorText}`);
+      }
+      
+      const contentType = response.headers.get('content-type');
+      console.log('Response content type:', contentType);
+      
+      // Check if it's an Excel file or if we should proceed anyway
+      if (contentType && contentType.includes('spreadsheet')) {
+        console.log('Valid Excel content type detected');
+      } else if (contentType && contentType.includes('text/plain')) {
+        // This is an error message
+        const errorText = await response.text();
+        throw new Error(errorText);
+      } else {
+        console.log('Unknown content type, proceeding with download');
+      }
+      
       const blob = await response.blob();
+      console.log('Blob created, size:', blob.size, 'type:', blob.type);
+      
+      // Create download link
       const url = window.URL.createObjectURL(blob);
       const a = document.createElement('a');
       a.href = url;
-      a.download = `voting-results-${new Date().toISOString().split('T')[0]}.json`;
+      a.download = `School-Election-Results-${new Date().toISOString().split('T')[0]}.xlsx`;
       document.body.appendChild(a);
       a.click();
+      
+      // Cleanup
       window.URL.revokeObjectURL(url);
       document.body.removeChild(a);
+      
+      showMessage('success', 'Excel file downloaded successfully!');
     } catch (error) {
-      showMessage('error', 'Failed to export results');
+      console.error('Export error:', error);
+      showMessage('error', 'Failed to export results: ' + (error instanceof Error ? error.message : 'Unknown error'));
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -402,10 +432,11 @@ const AdminPanel: React.FC<AdminPanelProps> = ({ onSettingsUpdate, onLogout }) =
                   
                   <button
                     onClick={exportResults}
-                    className="flex items-center space-x-2 px-4 py-2 bg-blue-100 text-blue-800 rounded-lg hover:bg-blue-200"
+                    disabled={loading}
+                    className="flex items-center space-x-2 px-4 py-2 bg-blue-100 text-blue-800 rounded-lg hover:bg-blue-200 disabled:opacity-50 disabled:cursor-not-allowed"
                   >
                     <Download className="h-4 w-4" />
-                    <span>Export Results</span>
+                    <span>{loading ? 'Exporting...' : 'Export Excel Report'}</span>
                   </button>
                 </div>
               </div>

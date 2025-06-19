@@ -37,5 +37,41 @@
     "sportsCaptainVote": "ram",
     "sportsViceCaptainVote": "shekar",
     "sessionToken": "4208e013"
+  },
+  {
+    "voterKey": "eda46d788e35ea4e967e3b89714b6c51907f1a24a7ec249a5e83abfa0271dccd",
+    "name": "erbrfb",
+    "class": "fnkn",
+    "division": "jbdfj",
+    "votedAt": "2025-06-19T23:33:49.571Z",
+    "headBoyVote": "Ananthakrishnan A",
+    "headGirlVote": "Vismaya Rajeev",
+    "sportsCaptainVote": "Aadhil Alias Binoy",
+    "sportsViceCaptainVote": null,
+    "sessionToken": "3dc547c4"
+  },
+  {
+    "voterKey": "10956459749203e7f4914ba480ccff95992408b0a5e832c333164ee758faa315",
+    "name": "dfmnf",
+    "class": "nfldn",
+    "division": "njd",
+    "votedAt": "2025-06-19T23:34:04.861Z",
+    "headBoyVote": "Athul Krishna",
+    "headGirlVote": "Vismaya Rajeev",
+    "sportsCaptainVote": "Aadhil Alias Binoy",
+    "sportsViceCaptainVote": null,
+    "sessionToken": "140dfb7a"
+  },
+  {
+    "voterKey": "25942ba44572ca698146330b0cf9eae3bbdd1ec8e93ed3643aaba710fabbd671",
+    "name": "smnm",
+    "class": "sndj'nj'",
+    "division": "knl",
+    "votedAt": "2025-06-19T23:34:16.614Z",
+    "headBoyVote": "Athul Krishna",
+    "headGirlVote": "Gatha Ajai Nair",
+    "sportsCaptainVote": "Aadhil Alias Binoy",
+    "sportsViceCaptainVote": null,
+    "sessionToken": "1a4e511a"
   }
 ]
