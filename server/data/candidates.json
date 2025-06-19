@@ -1,34 +1,84 @@
 {
   "headBoy": [
     {
-      "id": 1749901173909.681,
-      "name": "Rahul",
+      "id": 1750371644139.5645,
+      "name": "Ananthakrishnan A",
       "position": "headBoy",
-      "gender": ""
+      "logo": "",
+      "symbol": "/uploads/symbol-1750371649283.jpg"
+    },
+    {
+      "id": 1750371644140.228,
+      "name": "Athul Krishna",
+      "position": "headBoy",
+      "logo": ""
+    },
+    {
+      "id": 1750371644140.8098,
+      "name": "Shaun Abraham Varghese",
+      "position": "headBoy",
+      "logo": ""
+    },
+    {
+      "id": 1750371644141.4897,
+      "name": "Mukil Nair Arackal",
+      "position": "headBoy",
+      "logo": ""
     }
   ],
   "headGirl": [
     {
-      "id": 1749901173909.6296,
-      "name": "amenda",
+      "id": 1750371644141.4646,
+      "name": "Vismaya Rajeev",
       "position": "headGirl",
-      "gender": ""
+      "logo": ""
+    },
+    {
+      "id": 1750371644141.434,
+      "name": "Meenu Santhosh",
+      "position": "headGirl",
+      "logo": ""
+    },
+    {
+      "id": 1750371644141.3171,
+      "name": "Kavya K. Bijo",
+      "position": "headGirl",
+      "logo": ""
+    },
+    {
+      "id": 1750371644142.7524,
+      "name": "Gatha Ajai Nair",
+      "position": "headGirl",
+      "logo": "",
+      "symbol": "/uploads/symbol-1750371654143.jpg"
     }
   ],
   "sportsCaptain": [
     {
-      "id": 1749901173909.566,
-      "name": "ram",
+      "id": 1750371644142.8718,
+      "name": "Jewelina Elsa Martin",
       "position": "sportsCaptain",
-      "gender": ""
+      "logo": ""
+    },
+    {
+      "id": 1750371644144.0127,
+      "name": "Aadhil Alias Binoy",
+      "position": "sportsCaptain",
+      "logo": "",
+      "symbol": "/uploads/symbol-1750371659254.jpg"
+    },
+    {
+      "id": 1750371644144.901,
+      "name": "Hanna Manoj",
+      "position": "sportsCaptain",
+      "logo": ""
+    },
+    {
+      "id": 1750371644144.9058,
+      "name": "Amith Kane Kurian",
+      "position": "sportsCaptain",
+      "logo": ""
     }
   ],
-  "sportsViceCaptain": [
-    {
-      "id": 1749901173917.056,
-      "name": "shekar",
-      "position": "sportsViceCaptain",
-      "gender": ""
-    }
-  ]
+  "sportsViceCaptain": []
 }

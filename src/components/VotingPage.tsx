@@ -7,6 +7,8 @@ interface Candidate {
   name: string;
   position: string;
   gender?: string;
+  symbol?: string;
+  logo?: string;
 }
 
 interface CandidatesData {
@@ -24,7 +26,6 @@ interface VoterInfo {
   name: string;
   class: string;
   division: string;
-  dateOfBirth: string;
 }
 
 const VotingPage: React.FC<VotingPageProps> = ({ settings }) => {
@@ -38,8 +39,7 @@ const VotingPage: React.FC<VotingPageProps> = ({ settings }) => {
   const [voterInfo, setVoterInfo] = useState<VoterInfo>({
     name: '',
     class: '',
-    division: '',
-    dateOfBirth: ''
+    division: ''
   });
   const [selectedHeadBoy, setSelectedHeadBoy] = useState<string>('');
   const [selectedHeadGirl, setSelectedHeadGirl] = useState<string>('');
@@ -76,7 +76,7 @@ const VotingPage: React.FC<VotingPageProps> = ({ settings }) => {
     setSessionToken('');
     setSessionExpiry(null);
     setError('Your session has expired. Please verify again.');
-    setVoterInfo({ name: '', class: '', division: '', dateOfBirth: '' });
+    setVoterInfo({ name: '', class: '', division: '' });
     setSelectedHeadBoy('');
     setSelectedHeadGirl('');
     setSelectedSportsCaptain('');
@@ -105,14 +105,12 @@ const VotingPage: React.FC<VotingPageProps> = ({ settings }) => {
     setLoading(true);
     setError('');
 
-    // Basic client-side validation
-    if (!voterInfo.name.trim() || !voterInfo.class.trim() || !voterInfo.division.trim() || !voterInfo.dateOfBirth) {
+    if (!voterInfo.name.trim() || !voterInfo.class.trim() || !voterInfo.division.trim()) {
       setError('All fields are required');
       setLoading(false);
       return;
     }
 
-    // Basic name validation
     const cleanName = voterInfo.name.trim();
     if (cleanName.length < 2 || cleanName.length > 100) {
       setError('Name must be between 2-100 characters');
@@ -120,46 +118,20 @@ const VotingPage: React.FC<VotingPageProps> = ({ settings }) => {
       return;
     }
 
-    // Check for valid characters in name
     if (!/^[a-zA-Z\s\-'.]+$/.test(cleanName)) {
       setError('Name can only contain letters, spaces, hyphens, apostrophes, and dots');
       setLoading(false);
       return;
     }
 
-    // Basic class validation
     if (voterInfo.class.trim().length > 10) {
       setError('Class field must be under 10 characters');
       setLoading(false);
       return;
     }
 
-    // Basic division validation
     if (voterInfo.division.trim().length > 5) {
       setError('Division field must be under 5 characters');
-      setLoading(false);
-      return;
-    }
-
-    // Validate date of birth
-    const dob = new Date(voterInfo.dateOfBirth);
-    const now = new Date();
-    
-    if (isNaN(dob.getTime())) {
-      setError('Please enter a valid date of birth');
-      setLoading(false);
-      return;
-    }
-
-    if (dob > now) {
-      setError('Date of birth cannot be in the future');
-      setLoading(false);
-      return;
-    }
-
-    const age = (now.getTime() - dob.getTime()) / (1000 * 60 * 60 * 24 * 365.25);
-    if (age < 3 || age > 30) {
-      setError('Age must be between 3-30 years for school students');
       setLoading(false);
       return;
     }
@@ -290,10 +262,8 @@ const VotingPage: React.FC<VotingPageProps> = ({ settings }) => {
               <UserCheck className="h-12 w-12 text-blue-600" />
               <Shield className="h-8 w-8 text-green-600" />
             </div>
-            <h2 className="text-2xl font-bold text-gray-900 mb-2">Student Verification</h2>
-            <p className="text-gray-600">
-              Please enter your details to verify your eligibility to vote
-            </p>
+            <h2 className="text-2xl font-bold text-gray-900 mb-2">Student Details Submission</h2>
+            
           </div>
 
           <div className="bg-blue-50 rounded-lg p-4 mb-6">
@@ -305,7 +275,6 @@ const VotingPage: React.FC<VotingPageProps> = ({ settings }) => {
                   <li>• <strong>Name:</strong> Enter your full name as it appears in school records</li>
                   <li>• <strong>Class:</strong> Enter your class (e.g., 10, 11, 12, or 10A, 11B, etc.)</li>
                   <li>• <strong>Division:</strong> Enter your section/division (e.g., A, B, C, or 1, 2, 3)</li>
-                  <li>• <strong>Date of Birth:</strong> Select your exact date of birth</li>
                 </ul>
               </div>
             </div>
@@ -359,22 +328,6 @@ const VotingPage: React.FC<VotingPageProps> = ({ settings }) => {
                   maxLength={5}
                 />
                 <p className="text-xs text-gray-500 mt-1">Your section/division</p>
-              </div>
-
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">
-                  Date of Birth *
-                </label>
-                <input
-                  type="date"
-                  required
-                  value={voterInfo.dateOfBirth}
-                  onChange={(e) => setVoterInfo({ ...voterInfo, dateOfBirth: e.target.value })}
-                  className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                  max={new Date().toISOString().split('T')[0]}
-                  min={new Date(Date.now() - 30 * 365.25 * 24 * 60 * 60 * 1000).toISOString().split('T')[0]}
-                />
-                <p className="text-xs text-gray-500 mt-1">Your exact date of birth</p>
               </div>
             </div>
 
@@ -467,6 +420,18 @@ const VotingPage: React.FC<VotingPageProps> = ({ settings }) => {
                         onChange={() => setSelectedHeadBoy(candidate.name)}
                         className="text-blue-600"
                       />
+                      {candidate.logo && (
+                        <img
+                          src={`${API_URL}${candidate.logo}`}
+                          alt={`${candidate.name} logo`}
+                          className="h-32 w-32 object-contain mr-2 rounded-full border"
+                        />
+                      )}
+                      {candidate.symbol && candidate.symbol.endsWith('.pdf') ? (
+                        <a href={`${API_URL}${candidate.symbol}`} target="_blank" rel="noopener noreferrer" className="mr-2 text-blue-600 underline">View Symbol (PDF)</a>
+                      ) : (
+                        candidate.symbol && <img src={`${API_URL}${candidate.symbol}`} alt="Symbol" className="h-20 w-20 object-contain mr-2" />
+                      )}
                       <span className="font-medium text-gray-900">{candidate.name}</span>
                     </div>
                   </div>
@@ -522,6 +487,18 @@ const VotingPage: React.FC<VotingPageProps> = ({ settings }) => {
                         onChange={() => setSelectedHeadGirl(candidate.name)}
                         className="text-pink-600"
                       />
+                      {candidate.logo && (
+                        <img
+                          src={`${API_URL}${candidate.logo}`}
+                          alt={`${candidate.name} logo`}
+                          className="h-32 w-32 object-contain mr-2 rounded-full border"
+                        />
+                      )}
+                      {candidate.symbol && candidate.symbol.endsWith('.pdf') ? (
+                        <a href={`${API_URL}${candidate.symbol}`} target="_blank" rel="noopener noreferrer" className="mr-2 text-blue-600 underline">View Symbol (PDF)</a>
+                      ) : (
+                        candidate.symbol && <img src={`${API_URL}${candidate.symbol}`} alt="Symbol" className="h-20 w-20 object-contain mr-2" />
+                      )}
                       <span className="font-medium text-gray-900">{candidate.name}</span>
                     </div>
                   </div>
@@ -578,6 +555,18 @@ const VotingPage: React.FC<VotingPageProps> = ({ settings }) => {
                         onChange={() => setSelectedSportsCaptain(candidate.name)}
                         className="text-yellow-600"
                       />
+                      {candidate.logo && (
+                        <img
+                          src={`${API_URL}${candidate.logo}`}
+                          alt={`${candidate.name} logo`}
+                          className="h-32 w-32 object-contain mr-2 rounded-full border"
+                        />
+                      )}
+                      {candidate.symbol && candidate.symbol.endsWith('.pdf') ? (
+                        <a href={`${API_URL}${candidate.symbol}`} target="_blank" rel="noopener noreferrer" className="mr-2 text-blue-600 underline">View Symbol (PDF)</a>
+                      ) : (
+                        candidate.symbol && <img src={`${API_URL}${candidate.symbol}`} alt="Symbol" className="h-20 w-20 object-contain mr-2" />
+                      )}
                       <span className="font-medium text-gray-900">{candidate.name}</span>
                     </div>
                   </div>
@@ -634,6 +623,18 @@ const VotingPage: React.FC<VotingPageProps> = ({ settings }) => {
                         onChange={() => setSelectedSportsViceCaptain(candidate.name)}
                         className="text-orange-600"
                       />
+                      {candidate.logo && (
+                        <img
+                          src={`${API_URL}${candidate.logo}`}
+                          alt={`${candidate.name} logo`}
+                          className="h-32 w-32 object-contain mr-2 rounded-full border"
+                        />
+                      )}
+                      {candidate.symbol && candidate.symbol.endsWith('.pdf') ? (
+                        <a href={`${API_URL}${candidate.symbol}`} target="_blank" rel="noopener noreferrer" className="mr-2 text-blue-600 underline">View Symbol (PDF)</a>
+                      ) : (
+                        candidate.symbol && <img src={`${API_URL}${candidate.symbol}`} alt="Symbol" className="h-20 w-20 object-contain mr-2" />
+                      )}
                       <span className="font-medium text-gray-900">{candidate.name}</span>
                     </div>
                   </div>

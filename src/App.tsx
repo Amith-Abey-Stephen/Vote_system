@@ -1,9 +1,9 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
 import VotingPage from './components/VotingPage';
 import AdminPanel from './components/AdminPanel';
 import AdminLogin from './components/AdminLogin';
-import { Vote, Settings, Users } from 'lucide-react';
+// import { Vote, Settings, Users } from 'lucide-react';
 import { API_URL } from './config';
 import header_logo from './assets/header-logo.png';
 
@@ -33,7 +33,7 @@ function App() {
     }
   };
 
-  const handleAdminLogin = (token: string) => {
+  const handleAdminLogin = () => {
     setIsAdminAuthenticated(true);
   };
 
@@ -63,8 +63,8 @@ function App() {
               </div>
               <div className="flex-1 flex justify-center">
                 <div className="flex flex-col items-center">
-                  <h1 className="hidden sm:block text-xl font-bold text-gray-900">Election System</h1>
-                  <p className="hidden sm:block text-sm text-gray-600">Head Boy & Head Girl Elections</p>
+                  <h1 className="hidden sm:block text-xl font-bold text-gray-900"> Students' Council Election</h1>
+                  {/* <p className="hidden sm:block text-sm text-gray-600">Head Boy & Head Girl Elections</p> */}
                 </div>
               </div>
               <div className="w-12"></div> {/* Spacer to balance the layout */}

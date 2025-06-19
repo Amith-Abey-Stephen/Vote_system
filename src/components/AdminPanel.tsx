@@ -268,6 +268,30 @@ const AdminPanel: React.FC<AdminPanelProps> = ({ onSettingsUpdate, onLogout }) =
     }
   };
 
+  const handleSymbolUpload = async (position: string, id: number, file: File) => {
+    const formData = new FormData();
+    formData.append('symbol', file);
+    setLoading(true);
+    try {
+      const response = await fetch(`${API_URL}/api/candidates/${position}/${id}/symbol`, {
+        method: 'POST',
+        headers: getAuthHeadersForUpload(),
+        body: formData
+      });
+      const data = await response.json();
+      if (data.success) {
+        showMessage('success', 'Symbol uploaded successfully');
+        fetchStats();
+      } else {
+        showMessage('error', data.message || 'Failed to upload symbol');
+      }
+    } catch (error) {
+      showMessage('error', 'Failed to upload symbol');
+    } finally {
+      setLoading(false);
+    }
+  };
+
   return (
     <div className="max-w-7xl mx-auto p-6">
       <div className="bg-white rounded-xl shadow-lg">
@@ -436,8 +460,31 @@ const AdminPanel: React.FC<AdminPanelProps> = ({ onSettingsUpdate, onLogout }) =
                     <h4 className="text-lg font-semibold text-blue-900 mb-3">Head Boy Candidates</h4>
                     <div className="space-y-2">
                       {stats.candidates.headBoy.map((candidate) => (
-                        <div key={candidate.id} className="bg-white p-3 rounded-lg flex justify-between items-center">
+                        <div key={candidate.id} className="bg-white p-3 rounded-lg flex flex-col md:flex-row md:justify-between md:items-center space-y-2 md:space-y-0 md:space-x-4">
+                          <div className="flex items-center space-x-3">
+                            {/* Symbol preview */}
+                            {candidate.symbol && candidate.symbol.endsWith('.pdf') ? (
+                              <a href={`${API_URL}${candidate.symbol}`} target="_blank" rel="noopener noreferrer">View Symbol (PDF)</a>
+                            ) : (
+                              candidate.symbol && <img src={candidate.symbol} alt="Symbol" className="h-16 w-16 object-contain" />
+                            )}
                           <span className="font-medium">{candidate.name}</span>
+                          </div>
+                          <div className="flex items-center space-x-2">
+                            <label className="inline-block">
+                              <input
+                                type="file"
+                                accept=".jpg,.jpeg,.png,.pdf"
+                                style={{ display: 'none' }}
+                                onChange={e => {
+                                  if (e.target.files && e.target.files[0]) {
+                                    handleSymbolUpload('headBoy', candidate.id, e.target.files[0]);
+                                  }
+                                }}
+                                disabled={loading}
+                              />
+                              <span className="bg-gray-200 text-gray-800 px-2 py-1 rounded cursor-pointer hover:bg-gray-300 text-xs">Upload Symbol</span>
+                            </label>
                           <button
                             onClick={() => handleDeleteCandidate('headBoy', candidate.id)}
                             disabled={loading}
@@ -445,6 +492,7 @@ const AdminPanel: React.FC<AdminPanelProps> = ({ onSettingsUpdate, onLogout }) =
                           >
                             <Trash2 className="h-4 w-4" />
                           </button>
+                          </div>
                         </div>
                       ))}
                       {stats.candidates.headBoy.length === 0 && (
@@ -457,8 +505,31 @@ const AdminPanel: React.FC<AdminPanelProps> = ({ onSettingsUpdate, onLogout }) =
                     <h4 className="text-lg font-semibold text-pink-900 mb-3">Head Girl Candidates</h4>
                     <div className="space-y-2">
                       {stats.candidates.headGirl.map((candidate) => (
-                        <div key={candidate.id} className="bg-white p-3 rounded-lg flex justify-between items-center">
+                        <div key={candidate.id} className="bg-white p-3 rounded-lg flex flex-col md:flex-row md:justify-between md:items-center space-y-2 md:space-y-0 md:space-x-4">
+                          <div className="flex items-center space-x-3">
+                            {/* Symbol preview */}
+                            {candidate.symbol && candidate.symbol.endsWith('.pdf') ? (
+                              <a href={`${API_URL}${candidate.symbol}`} target="_blank" rel="noopener noreferrer">View Symbol (PDF)</a>
+                            ) : (
+                              candidate.symbol && <img src={candidate.symbol} alt="Symbol" className="h-16 w-16 object-contain" />
+                            )}
                           <span className="font-medium">{candidate.name}</span>
+                          </div>
+                          <div className="flex items-center space-x-2">
+                            <label className="inline-block">
+                              <input
+                                type="file"
+                                accept=".jpg,.jpeg,.png,.pdf"
+                                style={{ display: 'none' }}
+                                onChange={e => {
+                                  if (e.target.files && e.target.files[0]) {
+                                    handleSymbolUpload('headGirl', candidate.id, e.target.files[0]);
+                                  }
+                                }}
+                                disabled={loading}
+                              />
+                              <span className="bg-gray-200 text-gray-800 px-2 py-1 rounded cursor-pointer hover:bg-gray-300 text-xs">Upload Symbol</span>
+                            </label>
                           <button
                             onClick={() => handleDeleteCandidate('headGirl', candidate.id)}
                             disabled={loading}
@@ -466,6 +537,7 @@ const AdminPanel: React.FC<AdminPanelProps> = ({ onSettingsUpdate, onLogout }) =
                           >
                             <Trash2 className="h-4 w-4" />
                           </button>
+                          </div>
                         </div>
                       ))}
                       {stats.candidates.headGirl.length === 0 && (
@@ -481,8 +553,31 @@ const AdminPanel: React.FC<AdminPanelProps> = ({ onSettingsUpdate, onLogout }) =
                     </h4>
                     <div className="space-y-2">
                       {stats.candidates.sportsCaptain.map((candidate) => (
-                        <div key={candidate.id} className="bg-white p-3 rounded-lg flex justify-between items-center">
+                        <div key={candidate.id} className="bg-white p-3 rounded-lg flex flex-col md:flex-row md:justify-between md:items-center space-y-2 md:space-y-0 md:space-x-4">
+                          <div className="flex items-center space-x-3">
+                            {/* Symbol preview */}
+                            {candidate.symbol && candidate.symbol.endsWith('.pdf') ? (
+                              <a href={`${API_URL}${candidate.symbol}`} target="_blank" rel="noopener noreferrer">View Symbol (PDF)</a>
+                            ) : (
+                              candidate.symbol && <img src={candidate.symbol} alt="Symbol" className="h-16 w-16 object-contain" />
+                            )}
                           <span className="font-medium">{candidate.name}</span>
+                          </div>
+                          <div className="flex items-center space-x-2">
+                            <label className="inline-block">
+                              <input
+                                type="file"
+                                accept=".jpg,.jpeg,.png,.pdf"
+                                style={{ display: 'none' }}
+                                onChange={e => {
+                                  if (e.target.files && e.target.files[0]) {
+                                    handleSymbolUpload('sportsCaptain', candidate.id, e.target.files[0]);
+                                  }
+                                }}
+                                disabled={loading}
+                              />
+                              <span className="bg-gray-200 text-gray-800 px-2 py-1 rounded cursor-pointer hover:bg-gray-300 text-xs">Upload Symbol</span>
+                            </label>
                           <button
                             onClick={() => handleDeleteCandidate('sportsCaptain', candidate.id)}
                             disabled={loading}
@@ -490,6 +585,7 @@ const AdminPanel: React.FC<AdminPanelProps> = ({ onSettingsUpdate, onLogout }) =
                           >
                             <Trash2 className="h-4 w-4" />
                           </button>
+                          </div>
                         </div>
                       ))}
                       {stats.candidates.sportsCaptain.length === 0 && (
@@ -505,8 +601,31 @@ const AdminPanel: React.FC<AdminPanelProps> = ({ onSettingsUpdate, onLogout }) =
                     </h4>
                     <div className="space-y-2">
                       {stats.candidates.sportsViceCaptain.map((candidate) => (
-                        <div key={candidate.id} className="bg-white p-3 rounded-lg flex justify-between items-center">
+                        <div key={candidate.id} className="bg-white p-3 rounded-lg flex flex-col md:flex-row md:justify-between md:items-center space-y-2 md:space-y-0 md:space-x-4">
+                          <div className="flex items-center space-x-3">
+                            {/* Symbol preview */}
+                            {candidate.symbol && candidate.symbol.endsWith('.pdf') ? (
+                              <a href={`${API_URL}${candidate.symbol}`} target="_blank" rel="noopener noreferrer">View Symbol (PDF)</a>
+                            ) : (
+                              candidate.symbol && <img src={candidate.symbol} alt="Symbol" className="h-16 w-16 object-contain" />
+                            )}
                           <span className="font-medium">{candidate.name}</span>
+                          </div>
+                          <div className="flex items-center space-x-2">
+                            <label className="inline-block">
+                              <input
+                                type="file"
+                                accept=".jpg,.jpeg,.png,.pdf"
+                                style={{ display: 'none' }}
+                                onChange={e => {
+                                  if (e.target.files && e.target.files[0]) {
+                                    handleSymbolUpload('sportsViceCaptain', candidate.id, e.target.files[0]);
+                                  }
+                                }}
+                                disabled={loading}
+                              />
+                              <span className="bg-gray-200 text-gray-800 px-2 py-1 rounded cursor-pointer hover:bg-gray-300 text-xs">Upload Symbol</span>
+                            </label>
                           <button
                             onClick={() => handleDeleteCandidate('sportsViceCaptain', candidate.id)}
                             disabled={loading}
@@ -514,6 +633,7 @@ const AdminPanel: React.FC<AdminPanelProps> = ({ onSettingsUpdate, onLogout }) =
                           >
                             <Trash2 className="h-4 w-4" />
                           </button>
+                          </div>
                         </div>
                       ))}
                       {stats.candidates.sportsViceCaptain.length === 0 && (

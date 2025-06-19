@@ -6,6 +6,8 @@ import fs from 'fs/promises';
 import { fileURLToPath } from 'url';
 import { dirname, join } from 'path';
 import crypto from 'crypto';
+import path from 'path';
+import fsExtra from 'fs';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
@@ -31,6 +33,18 @@ const storage = multer.diskStorage({
 });
 
 const upload = multer({ storage });
+
+// Add symbol upload endpoint for candidates
+const symbolStorage = multer.diskStorage({
+  destination: (req, file, cb) => {
+    cb(null, 'uploads/');
+  },
+  filename: (req, file, cb) => {
+    const ext = file.originalname.split('.').pop();
+    cb(null, `symbol-${Date.now()}.${ext}`);
+  }
+});
+const symbolUpload = multer({ storage: symbolStorage });
 
 // Data file paths
 const dataDir = join(__dirname, 'data');
@@ -105,8 +119,8 @@ async function writeJsonFile(filePath, data) {
 }
 
 // Generate secure voter key with hash
-function generateVoterKey(name, studentClass, division, dateOfBirth) {
-  const rawKey = `${name.toLowerCase().trim()}_${studentClass.trim()}_${division.trim()}_${dateOfBirth}`;
+function generateVoterKey(name, studentClass, division) {
+  const rawKey = `${name.toLowerCase().trim()}_${studentClass.trim()}_${division.trim()}`;
   return crypto.createHash('sha256').update(rawKey).digest('hex');
 }
 
@@ -148,54 +162,25 @@ function rateLimit(req, res, next) {
 
 // Input validation and sanitization - more flexible
 function validateVoterInfo(voterInfo) {
-  const { name, class: studentClass, division, dateOfBirth } = voterInfo;
-  
-  // Check if all fields are present
-  if (!name || !studentClass || !division || !dateOfBirth) {
+  const { name, class: studentClass, division } = voterInfo;
+  if (!name || !studentClass || !division) {
     return { valid: false, message: 'All fields are required' };
   }
-
-  // Clean and validate name (allow more characters, including hyphens, apostrophes)
   const cleanName = name.trim();
   if (!cleanName || cleanName.length < 2 || cleanName.length > 100) {
     return { valid: false, message: 'Name must be between 2-100 characters' };
   }
-  
-  // More flexible name validation - allow letters, spaces, hyphens, apostrophes, dots
   if (!/^[a-zA-Z\s\-'.]+$/.test(cleanName)) {
     return { valid: false, message: 'Name can only contain letters, spaces, hyphens, apostrophes, and dots' };
   }
-
-  // Validate class (more flexible - allow common formats)
   const cleanClass = studentClass.trim().toUpperCase();
   if (!cleanClass || cleanClass.length > 10) {
     return { valid: false, message: 'Class field is required and must be under 10 characters' };
   }
-
-  // Validate division (more flexible)
   const cleanDivision = division.trim().toUpperCase();
   if (!cleanDivision || cleanDivision.length > 5) {
     return { valid: false, message: 'Division field is required and must be under 5 characters' };
   }
-
-  // Validate date of birth (more reasonable age range)
-  const dob = new Date(dateOfBirth);
-  const now = new Date();
-  const age = (now - dob) / (1000 * 60 * 60 * 24 * 365.25);
-  
-  if (isNaN(dob.getTime())) {
-    return { valid: false, message: 'Please enter a valid date of birth' };
-  }
-  
-  if (age < 3 || age > 30) {
-    return { valid: false, message: 'Age must be between 3-30 years for school students' };
-  }
-
-  // Check if date is not in the future
-  if (dob > now) {
-    return { valid: false, message: 'Date of birth cannot be in the future' };
-  }
-
   return { valid: true };
 }
 
@@ -275,7 +260,7 @@ app.get('/api/candidates', async (req, res) => {
 });
 
 // Upload candidates from Excel (protected)
-app.post('/api/upload-candidates', requireAuth, upload.single('excel'), async (req, res) => {
+app.post('/api/upload-candidates', requireAuth, upload.single('excel'), async function (req, res) {
   try {
     if (!req.file) {
       return res.status(400).json({ success: false, message: 'No file uploaded' });
@@ -302,7 +287,8 @@ app.post('/api/upload-candidates', requireAuth, upload.single('excel'), async (r
     const candidates = { headBoy: [], headGirl: [], sportsCaptain: [], sportsViceCaptain: [] };
     const errors = [];
 
-    data.forEach((row, index) => {
+    // Use Promise.all to handle async logo checks
+    await Promise.all(data.map(async (row, index) => {
       console.log(`Processing row ${index + 1}:`, row);
       
       if (!row.name || !row.position) {
@@ -310,11 +296,14 @@ app.post('/api/upload-candidates', requireAuth, upload.single('excel'), async (r
         return;
       }
 
+      // Ignore logo column from Excel
+      let logo = '';
+
       const candidate = {
         id: Date.now() + Math.random(),
         name: row.name.toString().trim(),
         position: row.position.toString().toLowerCase().trim(),
-        gender: row.gender ? row.gender.toString().toLowerCase().trim() : ''
+        logo
       };
 
       console.log(`Processed candidate:`, candidate);
@@ -368,7 +357,7 @@ app.post('/api/upload-candidates', requireAuth, upload.single('excel'), async (r
         default:
           errors.push(`Row ${index + 2}: Invalid position "${candidate.position}". Use: head boy, head girl, sports captain, sports vice captain`);
       }
-    });
+    }));
 
     console.log('Final candidates:', candidates);
     console.log('Errors:', errors);
@@ -476,8 +465,8 @@ app.post('/api/check-voter', rateLimit, async (req, res) => {
       return res.status(400).json({ success: false, message: validation.message });
     }
 
-    const { name, class: studentClass, division, dateOfBirth } = voterInfo;
-    const voterKey = generateVoterKey(name, studentClass, division, dateOfBirth);
+    const { name, class: studentClass, division } = voterInfo;
+    const voterKey = generateVoterKey(name, studentClass, division);
     
     console.log('Generated voter key:', voterKey.substring(0, 8) + '...');
     
@@ -749,6 +738,71 @@ setInterval(() => {
     }
   }
 }, 5 * 60 * 1000); // Run every 5 minutes
+
+// POST /api/candidates/:position/:id/symbol
+app.post('/api/candidates/:position/:id/symbol', requireAuth, symbolUpload.single('symbol'), async (req, res) => {
+  try {
+    const { position, id } = req.params;
+    if (!req.file) {
+      return res.status(400).json({ success: false, message: 'No file uploaded' });
+    }
+    const candidates = await readJsonFile(candidatesFile);
+    if (!candidates[position]) {
+      return res.status(400).json({ success: false, message: 'Invalid position' });
+    }
+    const candidateIndex = candidates[position].findIndex(c => c.id == id);
+    if (candidateIndex === -1) {
+      return res.status(404).json({ success: false, message: 'Candidate not found' });
+    }
+    // Save relative path
+    candidates[position][candidateIndex].symbol = `/uploads/${req.file.filename}`;
+    const success = await writeJsonFile(candidatesFile, candidates);
+    if (success) {
+      res.json({ success: true, symbol: candidates[position][candidateIndex].symbol });
+    } else {
+      res.status(500).json({ success: false, message: 'Failed to save symbol' });
+    }
+  } catch (error) {
+    console.error('Error uploading symbol:', error);
+    res.status(500).json({ success: false, message: 'Error uploading symbol' });
+  }
+});
+
+const symbolMultiUpload = multer({ dest: 'uploads/' });
+
+app.post('/api/upload-symbols', requireAuth, symbolMultiUpload.array('symbols', 50), async (req, res) => {
+  try {
+    const candidates = await readJsonFile(candidatesFile);
+    const files = req.files; // array of files
+
+    // Flatten all candidates into one array for easy matching
+    const allCandidates = [
+      ...candidates.headBoy,
+      ...candidates.headGirl,
+      ...candidates.sportsCaptain,
+      ...candidates.sportsViceCaptain
+    ];
+
+    for (const file of files) {
+      const match = allCandidates.find(
+        c => c.symbolFile && c.symbolFile.trim().toLowerCase() === file.originalname.trim().toLowerCase()
+      );
+      if (match) {
+        // Optionally rename the file to its original name for clarity
+        await fs.rename(`uploads/${file.filename}`, `uploads/${file.originalname}`);
+        match.symbol = `/uploads/${file.originalname}`;
+      }
+    }
+
+    await writeJsonFile(candidatesFile, candidates);
+    res.json({ success: true, message: 'Symbols uploaded and matched.' });
+  } catch (error) {
+    console.error('Error uploading symbols:', error);
+    res.status(500).json({ success: false, message: 'Error uploading symbols.' });
+  }
+});
+
+app.use('/uploads', express.static('uploads'));
 
 // Initialize and start server
 initializeData().then(() => {
