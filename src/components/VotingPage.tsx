@@ -427,7 +427,9 @@ const VotingPage: React.FC<VotingPageProps> = ({ settings }) => {
                           className="h-32 w-32 object-contain mr-2 rounded-full border"
                         />
                       )}
-                      {candidate.symbol && candidate.symbol.endsWith('.pdf') ? (
+                      {candidate.symbol && candidate.symbol.startsWith('data:') ? (
+                        <img src={candidate.symbol} alt="Symbol" className="h-20 w-20 object-contain mr-2" />
+                      ) : candidate.symbol && candidate.symbol.endsWith('.pdf') ? (
                         <a href={`${API_URL}${candidate.symbol}`} target="_blank" rel="noopener noreferrer" className="mr-2 text-blue-600 underline">View Symbol (PDF)</a>
                       ) : (
                         candidate.symbol && <img src={`${API_URL}${candidate.symbol}`} alt="Symbol" className="h-20 w-20 object-contain mr-2" />
@@ -494,7 +496,9 @@ const VotingPage: React.FC<VotingPageProps> = ({ settings }) => {
                           className="h-32 w-32 object-contain mr-2 rounded-full border"
                         />
                       )}
-                      {candidate.symbol && candidate.symbol.endsWith('.pdf') ? (
+                      {candidate.symbol && candidate.symbol.startsWith('data:') ? (
+                        <img src={candidate.symbol} alt="Symbol" className="h-20 w-20 object-contain mr-2" />
+                      ) : candidate.symbol && candidate.symbol.endsWith('.pdf') ? (
                         <a href={`${API_URL}${candidate.symbol}`} target="_blank" rel="noopener noreferrer" className="mr-2 text-blue-600 underline">View Symbol (PDF)</a>
                       ) : (
                         candidate.symbol && <img src={`${API_URL}${candidate.symbol}`} alt="Symbol" className="h-20 w-20 object-contain mr-2" />
@@ -562,7 +566,9 @@ const VotingPage: React.FC<VotingPageProps> = ({ settings }) => {
                           className="h-32 w-32 object-contain mr-2 rounded-full border"
                         />
                       )}
-                      {candidate.symbol && candidate.symbol.endsWith('.pdf') ? (
+                      {candidate.symbol && candidate.symbol.startsWith('data:') ? (
+                        <img src={candidate.symbol} alt="Symbol" className="h-20 w-20 object-contain mr-2" />
+                      ) : candidate.symbol && candidate.symbol.endsWith('.pdf') ? (
                         <a href={`${API_URL}${candidate.symbol}`} target="_blank" rel="noopener noreferrer" className="mr-2 text-blue-600 underline">View Symbol (PDF)</a>
                       ) : (
                         candidate.symbol && <img src={`${API_URL}${candidate.symbol}`} alt="Symbol" className="h-20 w-20 object-contain mr-2" />
@@ -630,7 +636,9 @@ const VotingPage: React.FC<VotingPageProps> = ({ settings }) => {
                           className="h-32 w-32 object-contain mr-2 rounded-full border"
                         />
                       )}
-                      {candidate.symbol && candidate.symbol.endsWith('.pdf') ? (
+                      {candidate.symbol && candidate.symbol.startsWith('data:') ? (
+                        <img src={candidate.symbol} alt="Symbol" className="h-20 w-20 object-contain mr-2" />
+                      ) : candidate.symbol && candidate.symbol.endsWith('.pdf') ? (
                         <a href={`${API_URL}${candidate.symbol}`} target="_blank" rel="noopener noreferrer" className="mr-2 text-blue-600 underline">View Symbol (PDF)</a>
                       ) : (
                         candidate.symbol && <img src={`${API_URL}${candidate.symbol}`} alt="Symbol" className="h-20 w-20 object-contain mr-2" />

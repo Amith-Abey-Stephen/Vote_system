@@ -463,10 +463,12 @@ const AdminPanel: React.FC<AdminPanelProps> = ({ onSettingsUpdate, onLogout }) =
                         <div key={candidate.id} className="bg-white p-3 rounded-lg flex flex-col md:flex-row md:justify-between md:items-center space-y-2 md:space-y-0 md:space-x-4">
                           <div className="flex items-center space-x-3">
                             {/* Symbol preview */}
-                            {candidate.symbol && candidate.symbol.endsWith('.pdf') ? (
+                            {candidate.symbol && candidate.symbol.startsWith('data:') ? (
+                              <img src={candidate.symbol} alt="Symbol" className="h-16 w-16 object-contain" />
+                            ) : candidate.symbol && candidate.symbol.endsWith('.pdf') ? (
                               <a href={`${API_URL}${candidate.symbol}`} target="_blank" rel="noopener noreferrer">View Symbol (PDF)</a>
                             ) : (
-                              candidate.symbol && <img src={candidate.symbol} alt="Symbol" className="h-16 w-16 object-contain" />
+                              candidate.symbol && <img src={`${API_URL}${candidate.symbol}`} alt="Symbol" className="h-16 w-16 object-contain" />
                             )}
                           <span className="font-medium">{candidate.name}</span>
                           </div>
@@ -508,10 +510,12 @@ const AdminPanel: React.FC<AdminPanelProps> = ({ onSettingsUpdate, onLogout }) =
                         <div key={candidate.id} className="bg-white p-3 rounded-lg flex flex-col md:flex-row md:justify-between md:items-center space-y-2 md:space-y-0 md:space-x-4">
                           <div className="flex items-center space-x-3">
                             {/* Symbol preview */}
-                            {candidate.symbol && candidate.symbol.endsWith('.pdf') ? (
+                            {candidate.symbol && candidate.symbol.startsWith('data:') ? (
+                              <img src={candidate.symbol} alt="Symbol" className="h-16 w-16 object-contain" />
+                            ) : candidate.symbol && candidate.symbol.endsWith('.pdf') ? (
                               <a href={`${API_URL}${candidate.symbol}`} target="_blank" rel="noopener noreferrer">View Symbol (PDF)</a>
                             ) : (
-                              candidate.symbol && <img src={candidate.symbol} alt="Symbol" className="h-16 w-16 object-contain" />
+                              candidate.symbol && <img src={`${API_URL}${candidate.symbol}`} alt="Symbol" className="h-16 w-16 object-contain" />
                             )}
                           <span className="font-medium">{candidate.name}</span>
                           </div>
@@ -556,10 +560,12 @@ const AdminPanel: React.FC<AdminPanelProps> = ({ onSettingsUpdate, onLogout }) =
                         <div key={candidate.id} className="bg-white p-3 rounded-lg flex flex-col md:flex-row md:justify-between md:items-center space-y-2 md:space-y-0 md:space-x-4">
                           <div className="flex items-center space-x-3">
                             {/* Symbol preview */}
-                            {candidate.symbol && candidate.symbol.endsWith('.pdf') ? (
+                            {candidate.symbol && candidate.symbol.startsWith('data:') ? (
+                              <img src={candidate.symbol} alt="Symbol" className="h-16 w-16 object-contain" />
+                            ) : candidate.symbol && candidate.symbol.endsWith('.pdf') ? (
                               <a href={`${API_URL}${candidate.symbol}`} target="_blank" rel="noopener noreferrer">View Symbol (PDF)</a>
                             ) : (
-                              candidate.symbol && <img src={candidate.symbol} alt="Symbol" className="h-16 w-16 object-contain" />
+                              candidate.symbol && <img src={`${API_URL}${candidate.symbol}`} alt="Symbol" className="h-16 w-16 object-contain" />
                             )}
                           <span className="font-medium">{candidate.name}</span>
                           </div>
@@ -604,10 +610,12 @@ const AdminPanel: React.FC<AdminPanelProps> = ({ onSettingsUpdate, onLogout }) =
                         <div key={candidate.id} className="bg-white p-3 rounded-lg flex flex-col md:flex-row md:justify-between md:items-center space-y-2 md:space-y-0 md:space-x-4">
                           <div className="flex items-center space-x-3">
                             {/* Symbol preview */}
-                            {candidate.symbol && candidate.symbol.endsWith('.pdf') ? (
+                            {candidate.symbol && candidate.symbol.startsWith('data:') ? (
+                              <img src={candidate.symbol} alt="Symbol" className="h-16 w-16 object-contain" />
+                            ) : candidate.symbol && candidate.symbol.endsWith('.pdf') ? (
                               <a href={`${API_URL}${candidate.symbol}`} target="_blank" rel="noopener noreferrer">View Symbol (PDF)</a>
                             ) : (
-                              candidate.symbol && <img src={candidate.symbol} alt="Symbol" className="h-16 w-16 object-contain" />
+                              candidate.symbol && <img src={`${API_URL}${candidate.symbol}`} alt="Symbol" className="h-16 w-16 object-contain" />
                             )}
                           <span className="font-medium">{candidate.name}</span>
                           </div>

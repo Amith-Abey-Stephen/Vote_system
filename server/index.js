@@ -746,16 +746,27 @@ app.post('/api/candidates/:position/:id/symbol', requireAuth, symbolUpload.singl
     if (!req.file) {
       return res.status(400).json({ success: false, message: 'No file uploaded' });
     }
+    
     const candidates = await readJsonFile(candidatesFile);
     if (!candidates[position]) {
       return res.status(400).json({ success: false, message: 'Invalid position' });
     }
+    
     const candidateIndex = candidates[position].findIndex(c => c.id == id);
     if (candidateIndex === -1) {
       return res.status(404).json({ success: false, message: 'Candidate not found' });
     }
-    // Save relative path
-    candidates[position][candidateIndex].symbol = `/uploads/${req.file.filename}`;
+    
+    // Convert file to base64
+    const fileBuffer = await fs.readFile(req.file.path);
+    const base64String = `data:${req.file.mimetype};base64,${fileBuffer.toString('base64')}`;
+    
+    // Save base64 data instead of file path
+    candidates[position][candidateIndex].symbol = base64String;
+    
+    // Clean up the temporary file
+    await fs.unlink(req.file.path);
+    
     const success = await writeJsonFile(candidatesFile, candidates);
     if (success) {
       res.json({ success: true, symbol: candidates[position][candidateIndex].symbol });
@@ -801,8 +812,6 @@ app.post('/api/upload-symbols', requireAuth, symbolMultiUpload.array('symbols', 
     res.status(500).json({ success: false, message: 'Error uploading symbols.' });
   }
 });
-
-app.use('/uploads', express.static('uploads'));
 
 // Initialize and start server
 initializeData().then(() => {
