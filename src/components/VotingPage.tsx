@@ -400,7 +400,7 @@ const VotingPage: React.FC<VotingPageProps> = ({ settings }) => {
                 </span>
                 Select One Candidate (Optional)
               </h3>
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+              <div className="space-y-3">
                 {candidates.headBoy.map((candidate) => (
                   <div
                     key={candidate.id}
@@ -434,7 +434,7 @@ const VotingPage: React.FC<VotingPageProps> = ({ settings }) => {
                       ) : (
                         candidate.symbol && <img src={`${API_URL}${candidate.symbol}`} alt="Symbol" className="h-20 w-20 object-contain mr-2" />
                       )}
-                      <span className="font-medium text-gray-900">{candidate.name}</span>
+                      <span className="font-medium text-gray-900 text-lg">{candidate.name}</span>
                     </div>
                   </div>
                 ))}
@@ -469,7 +469,7 @@ const VotingPage: React.FC<VotingPageProps> = ({ settings }) => {
                 </span>
                 Select One Candidate (Optional)
               </h3>
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+              <div className="space-y-3">
                 {candidates.headGirl.map((candidate) => (
                   <div
                     key={candidate.id}
@@ -503,7 +503,7 @@ const VotingPage: React.FC<VotingPageProps> = ({ settings }) => {
                       ) : (
                         candidate.symbol && <img src={`${API_URL}${candidate.symbol}`} alt="Symbol" className="h-20 w-20 object-contain mr-2" />
                       )}
-                      <span className="font-medium text-gray-900">{candidate.name}</span>
+                      <span className="font-medium text-gray-900 text-lg">{candidate.name}</span>
                     </div>
                   </div>
                 ))}
@@ -539,7 +539,7 @@ const VotingPage: React.FC<VotingPageProps> = ({ settings }) => {
                 </span>
                 Select One Candidate (Optional)
               </h3>
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+              <div className="space-y-3">
                 {candidates.sportsCaptain.map((candidate) => (
                   <div
                     key={candidate.id}
@@ -573,7 +573,7 @@ const VotingPage: React.FC<VotingPageProps> = ({ settings }) => {
                       ) : (
                         candidate.symbol && <img src={`${API_URL}${candidate.symbol}`} alt="Symbol" className="h-20 w-20 object-contain mr-2" />
                       )}
-                      <span className="font-medium text-gray-900">{candidate.name}</span>
+                      <span className="font-medium text-gray-900 text-lg">{candidate.name}</span>
                     </div>
                   </div>
                 ))}
@@ -609,7 +609,7 @@ const VotingPage: React.FC<VotingPageProps> = ({ settings }) => {
                 </span>
                 Select One Candidate (Optional)
               </h3>
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+              <div className="space-y-3">
                 {candidates.sportsViceCaptain.map((candidate) => (
                   <div
                     key={candidate.id}
@@ -643,7 +643,7 @@ const VotingPage: React.FC<VotingPageProps> = ({ settings }) => {
                       ) : (
                         candidate.symbol && <img src={`${API_URL}${candidate.symbol}`} alt="Symbol" className="h-20 w-20 object-contain mr-2" />
                       )}
-                      <span className="font-medium text-gray-900">{candidate.name}</span>
+                      <span className="font-medium text-gray-900 text-lg">{candidate.name}</span>
                     </div>
                   </div>
                 ))}
