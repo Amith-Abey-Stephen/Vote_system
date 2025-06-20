@@ -394,11 +394,11 @@ const VotingPage: React.FC<VotingPageProps> = ({ settings }) => {
           <form onSubmit={handleVoteSubmission} className="space-y-8">
             {/* Head Boy Candidates */}
             <div>
-              <h3 className="text-xl font-semibold text-gray-900 mb-4 flex items-center">
-                <span className="bg-blue-100 text-blue-800 px-3 py-1 rounded-full text-sm mr-3">
+              <h3 className="text-2xl font-bold text-gray-900 mb-6 flex items-center">
+                <span className="bg-blue-100 text-blue-800 px-4 py-2 rounded-full text-lg mr-4">
                   Head Boy
                 </span>
-                Select One Candidate (Optional)
+                <span className="text-gray-600 font-medium">Select One Candidate (Optional)</span>
               </h3>
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
                 {candidates.headBoy.map((candidate) => (
@@ -463,11 +463,11 @@ const VotingPage: React.FC<VotingPageProps> = ({ settings }) => {
 
             {/* Head Girl Candidates */}
             <div>
-              <h3 className="text-xl font-semibold text-gray-900 mb-4 flex items-center">
-                <span className="bg-pink-100 text-pink-800 px-3 py-1 rounded-full text-sm mr-3">
+              <h3 className="text-2xl font-bold text-gray-900 mb-6 flex items-center">
+                <span className="bg-pink-100 text-pink-800 px-4 py-2 rounded-full text-lg mr-4">
                   Head Girl
                 </span>
-                Select One Candidate (Optional)
+                <span className="text-gray-600 font-medium">Select One Candidate (Optional)</span>
               </h3>
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
                 {candidates.headGirl.map((candidate) => (
@@ -532,12 +532,12 @@ const VotingPage: React.FC<VotingPageProps> = ({ settings }) => {
 
             {/* Sports Captain Candidates */}
             <div>
-              <h3 className="text-xl font-semibold text-gray-900 mb-4 flex items-center">
-                <span className="bg-yellow-100 text-yellow-800 px-3 py-1 rounded-full text-sm mr-3 flex items-center space-x-1">
-                  <Trophy className="h-4 w-4" />
+              <h3 className="text-2xl font-bold text-gray-900 mb-6 flex items-center">
+                <span className="bg-yellow-100 text-yellow-800 px-4 py-2 rounded-full text-lg mr-4 flex items-center space-x-2">
+                  <Trophy className="h-5 w-5" />
                   <span>Sports Captain</span>
                 </span>
-                Select One Candidate (Optional)
+                <span className="text-gray-600 font-medium">Select One Candidate (Optional)</span>
               </h3>
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
                 {candidates.sportsCaptain.map((candidate) => (
@@ -602,12 +602,12 @@ const VotingPage: React.FC<VotingPageProps> = ({ settings }) => {
 
             {/* Sports Vice Captain Candidates */}
             <div>
-              <h3 className="text-xl font-semibold text-gray-900 mb-4 flex items-center">
-                <span className="bg-orange-100 text-orange-800 px-3 py-1 rounded-full text-sm mr-3 flex items-center space-x-1">
-                  <Medal className="h-4 w-4" />
+              <h3 className="text-2xl font-bold text-gray-900 mb-6 flex items-center">
+                <span className="bg-orange-100 text-orange-800 px-4 py-2 rounded-full text-lg mr-4 flex items-center space-x-2">
+                  <Medal className="h-5 w-5" />
                   <span>Sports Vice Captain</span>
                 </span>
-                Select One Candidate (Optional)
+                <span className="text-gray-600 font-medium">Select One Candidate (Optional)</span>
               </h3>
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
                 {candidates.sportsViceCaptain.map((candidate) => (
