@@ -400,7 +400,7 @@ const VotingPage: React.FC<VotingPageProps> = ({ settings }) => {
                 </span>
                 Select One Candidate (Optional)
               </h3>
-              <div className="space-y-3">
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
                 {candidates.headBoy.map((candidate) => (
                   <div
                     key={candidate.id}
@@ -411,7 +411,7 @@ const VotingPage: React.FC<VotingPageProps> = ({ settings }) => {
                     }`}
                     onClick={() => setSelectedHeadBoy(selectedHeadBoy === candidate.name ? '' : candidate.name)}
                   >
-                    <div className="flex items-center space-x-3">
+                    <div className="flex flex-col items-center space-y-3">
                       <input
                         type="radio"
                         name="headBoy"
@@ -424,17 +424,17 @@ const VotingPage: React.FC<VotingPageProps> = ({ settings }) => {
                         <img
                           src={`${API_URL}${candidate.logo}`}
                           alt={`${candidate.name} logo`}
-                          className="h-32 w-32 object-contain mr-2 rounded-full border"
+                          className="h-32 w-32 object-contain rounded-full border"
                         />
                       )}
                       {candidate.symbol && candidate.symbol.startsWith('data:') ? (
-                        <img src={candidate.symbol} alt="Symbol" className="h-20 w-20 object-contain mr-2" />
+                        <img src={candidate.symbol} alt="Symbol" className="h-24 w-24 object-contain" />
                       ) : candidate.symbol && candidate.symbol.endsWith('.pdf') ? (
-                        <a href={`${API_URL}${candidate.symbol}`} target="_blank" rel="noopener noreferrer" className="mr-2 text-blue-600 underline">View Symbol (PDF)</a>
+                        <a href={`${API_URL}${candidate.symbol}`} target="_blank" rel="noopener noreferrer" className="text-blue-600 underline text-sm">View Symbol (PDF)</a>
                       ) : (
-                        candidate.symbol && <img src={`${API_URL}${candidate.symbol}`} alt="Symbol" className="h-20 w-20 object-contain mr-2" />
+                        candidate.symbol && <img src={`${API_URL}${candidate.symbol}`} alt="Symbol" className="h-24 w-24 object-contain" />
                       )}
-                      <span className="font-medium text-gray-900 text-lg">{candidate.name}</span>
+                      <span className="font-medium text-gray-900 text-center">{candidate.name}</span>
                     </div>
                   </div>
                 ))}
@@ -446,7 +446,7 @@ const VotingPage: React.FC<VotingPageProps> = ({ settings }) => {
                   }`}
                   onClick={() => setSelectedHeadBoy('')}
                 >
-                  <div className="flex items-center space-x-3">
+                  <div className="flex flex-col items-center space-y-3">
                     <input
                       type="radio"
                       name="headBoy"
@@ -455,7 +455,7 @@ const VotingPage: React.FC<VotingPageProps> = ({ settings }) => {
                       onChange={() => setSelectedHeadBoy('')}
                       className="text-gray-600"
                     />
-                    <span className="font-medium text-gray-600">Skip Head Boy Vote</span>
+                    <span className="font-medium text-gray-600 text-center">Skip Head Boy Vote</span>
                   </div>
                 </div>
               </div>
@@ -469,7 +469,7 @@ const VotingPage: React.FC<VotingPageProps> = ({ settings }) => {
                 </span>
                 Select One Candidate (Optional)
               </h3>
-              <div className="space-y-3">
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
                 {candidates.headGirl.map((candidate) => (
                   <div
                     key={candidate.id}
@@ -480,7 +480,7 @@ const VotingPage: React.FC<VotingPageProps> = ({ settings }) => {
                     }`}
                     onClick={() => setSelectedHeadGirl(selectedHeadGirl === candidate.name ? '' : candidate.name)}
                   >
-                    <div className="flex items-center space-x-3">
+                    <div className="flex flex-col items-center space-y-3">
                       <input
                         type="radio"
                         name="headGirl"
@@ -493,17 +493,17 @@ const VotingPage: React.FC<VotingPageProps> = ({ settings }) => {
                         <img
                           src={`${API_URL}${candidate.logo}`}
                           alt={`${candidate.name} logo`}
-                          className="h-32 w-32 object-contain mr-2 rounded-full border"
+                          className="h-32 w-32 object-contain rounded-full border"
                         />
                       )}
                       {candidate.symbol && candidate.symbol.startsWith('data:') ? (
-                        <img src={candidate.symbol} alt="Symbol" className="h-20 w-20 object-contain mr-2" />
+                        <img src={candidate.symbol} alt="Symbol" className="h-24 w-24 object-contain" />
                       ) : candidate.symbol && candidate.symbol.endsWith('.pdf') ? (
-                        <a href={`${API_URL}${candidate.symbol}`} target="_blank" rel="noopener noreferrer" className="mr-2 text-blue-600 underline">View Symbol (PDF)</a>
+                        <a href={`${API_URL}${candidate.symbol}`} target="_blank" rel="noopener noreferrer" className="text-blue-600 underline text-sm">View Symbol (PDF)</a>
                       ) : (
-                        candidate.symbol && <img src={`${API_URL}${candidate.symbol}`} alt="Symbol" className="h-20 w-20 object-contain mr-2" />
+                        candidate.symbol && <img src={`${API_URL}${candidate.symbol}`} alt="Symbol" className="h-24 w-24 object-contain" />
                       )}
-                      <span className="font-medium text-gray-900 text-lg">{candidate.name}</span>
+                      <span className="font-medium text-gray-900 text-center">{candidate.name}</span>
                     </div>
                   </div>
                 ))}
@@ -515,7 +515,7 @@ const VotingPage: React.FC<VotingPageProps> = ({ settings }) => {
                   }`}
                   onClick={() => setSelectedHeadGirl('')}
                 >
-                  <div className="flex items-center space-x-3">
+                  <div className="flex flex-col items-center space-y-3">
                     <input
                       type="radio"
                       name="headGirl"
@@ -524,7 +524,7 @@ const VotingPage: React.FC<VotingPageProps> = ({ settings }) => {
                       onChange={() => setSelectedHeadGirl('')}
                       className="text-gray-600"
                     />
-                    <span className="font-medium text-gray-600">Skip Head Girl Vote</span>
+                    <span className="font-medium text-gray-600 text-center">Skip Head Girl Vote</span>
                   </div>
                 </div>
               </div>
@@ -539,7 +539,7 @@ const VotingPage: React.FC<VotingPageProps> = ({ settings }) => {
                 </span>
                 Select One Candidate (Optional)
               </h3>
-              <div className="space-y-3">
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
                 {candidates.sportsCaptain.map((candidate) => (
                   <div
                     key={candidate.id}
@@ -550,7 +550,7 @@ const VotingPage: React.FC<VotingPageProps> = ({ settings }) => {
                     }`}
                     onClick={() => setSelectedSportsCaptain(selectedSportsCaptain === candidate.name ? '' : candidate.name)}
                   >
-                    <div className="flex items-center space-x-3">
+                    <div className="flex flex-col items-center space-y-3">
                       <input
                         type="radio"
                         name="sportsCaptain"
@@ -563,17 +563,17 @@ const VotingPage: React.FC<VotingPageProps> = ({ settings }) => {
                         <img
                           src={`${API_URL}${candidate.logo}`}
                           alt={`${candidate.name} logo`}
-                          className="h-32 w-32 object-contain mr-2 rounded-full border"
+                          className="h-32 w-32 object-contain rounded-full border"
                         />
                       )}
                       {candidate.symbol && candidate.symbol.startsWith('data:') ? (
-                        <img src={candidate.symbol} alt="Symbol" className="h-20 w-20 object-contain mr-2" />
+                        <img src={candidate.symbol} alt="Symbol" className="h-24 w-24 object-contain" />
                       ) : candidate.symbol && candidate.symbol.endsWith('.pdf') ? (
-                        <a href={`${API_URL}${candidate.symbol}`} target="_blank" rel="noopener noreferrer" className="mr-2 text-blue-600 underline">View Symbol (PDF)</a>
+                        <a href={`${API_URL}${candidate.symbol}`} target="_blank" rel="noopener noreferrer" className="text-blue-600 underline text-sm">View Symbol (PDF)</a>
                       ) : (
-                        candidate.symbol && <img src={`${API_URL}${candidate.symbol}`} alt="Symbol" className="h-20 w-20 object-contain mr-2" />
+                        candidate.symbol && <img src={`${API_URL}${candidate.symbol}`} alt="Symbol" className="h-24 w-24 object-contain" />
                       )}
-                      <span className="font-medium text-gray-900 text-lg">{candidate.name}</span>
+                      <span className="font-medium text-gray-900 text-center">{candidate.name}</span>
                     </div>
                   </div>
                 ))}
@@ -585,7 +585,7 @@ const VotingPage: React.FC<VotingPageProps> = ({ settings }) => {
                   }`}
                   onClick={() => setSelectedSportsCaptain('')}
                 >
-                  <div className="flex items-center space-x-3">
+                  <div className="flex flex-col items-center space-y-3">
                     <input
                       type="radio"
                       name="sportsCaptain"
@@ -594,7 +594,7 @@ const VotingPage: React.FC<VotingPageProps> = ({ settings }) => {
                       onChange={() => setSelectedSportsCaptain('')}
                       className="text-gray-600"
                     />
-                    <span className="font-medium text-gray-600">Skip Sports Captain Vote</span>
+                    <span className="font-medium text-gray-600 text-center">Skip Sports Captain Vote</span>
                   </div>
                 </div>
               </div>
@@ -609,7 +609,7 @@ const VotingPage: React.FC<VotingPageProps> = ({ settings }) => {
                 </span>
                 Select One Candidate (Optional)
               </h3>
-              <div className="space-y-3">
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
                 {candidates.sportsViceCaptain.map((candidate) => (
                   <div
                     key={candidate.id}
@@ -620,7 +620,7 @@ const VotingPage: React.FC<VotingPageProps> = ({ settings }) => {
                     }`}
                     onClick={() => setSelectedSportsViceCaptain(selectedSportsViceCaptain === candidate.name ? '' : candidate.name)}
                   >
-                    <div className="flex items-center space-x-3">
+                    <div className="flex flex-col items-center space-y-3">
                       <input
                         type="radio"
                         name="sportsViceCaptain"
@@ -633,17 +633,17 @@ const VotingPage: React.FC<VotingPageProps> = ({ settings }) => {
                         <img
                           src={`${API_URL}${candidate.logo}`}
                           alt={`${candidate.name} logo`}
-                          className="h-32 w-32 object-contain mr-2 rounded-full border"
+                          className="h-32 w-32 object-contain rounded-full border"
                         />
                       )}
                       {candidate.symbol && candidate.symbol.startsWith('data:') ? (
-                        <img src={candidate.symbol} alt="Symbol" className="h-20 w-20 object-contain mr-2" />
+                        <img src={candidate.symbol} alt="Symbol" className="h-24 w-24 object-contain" />
                       ) : candidate.symbol && candidate.symbol.endsWith('.pdf') ? (
-                        <a href={`${API_URL}${candidate.symbol}`} target="_blank" rel="noopener noreferrer" className="mr-2 text-blue-600 underline">View Symbol (PDF)</a>
+                        <a href={`${API_URL}${candidate.symbol}`} target="_blank" rel="noopener noreferrer" className="text-blue-600 underline text-sm">View Symbol (PDF)</a>
                       ) : (
-                        candidate.symbol && <img src={`${API_URL}${candidate.symbol}`} alt="Symbol" className="h-20 w-20 object-contain mr-2" />
+                        candidate.symbol && <img src={`${API_URL}${candidate.symbol}`} alt="Symbol" className="h-24 w-24 object-contain" />
                       )}
-                      <span className="font-medium text-gray-900 text-lg">{candidate.name}</span>
+                      <span className="font-medium text-gray-900 text-center">{candidate.name}</span>
                     </div>
                   </div>
                 ))}
@@ -655,7 +655,7 @@ const VotingPage: React.FC<VotingPageProps> = ({ settings }) => {
                   }`}
                   onClick={() => setSelectedSportsViceCaptain('')}
                 >
-                  <div className="flex items-center space-x-3">
+                  <div className="flex flex-col items-center space-y-3">
                     <input
                       type="radio"
                       name="sportsViceCaptain"
@@ -664,7 +664,7 @@ const VotingPage: React.FC<VotingPageProps> = ({ settings }) => {
                       onChange={() => setSelectedSportsViceCaptain('')}
                       className="text-gray-600"
                     />
-                    <span className="font-medium text-gray-600">Skip Sports Vice Captain Vote</span>
+                    <span className="font-medium text-gray-600 text-center">Skip Sports Vice Captain Vote</span>
                   </div>
                 </div>
               </div>
